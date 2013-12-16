@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="include\Commands.h" />
     <ClInclude Include="include\FileTokenizer.h" />
+    <ClInclude Include="include\MemoryManager.h" />
     <ClInclude Include="include\StringUtility.h" />
     <ClInclude Include="include\Tokens.h" />
     <ClInclude Include="include\VM.h" />
@@ -21,6 +22,7 @@
   <ItemGroup>
     <ClCompile Include="src\Commands.cpp" />
     <ClCompile Include="src\FileTokenizer.cpp" />
+    <ClCompile Include="src\MemoryManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StringUtility.cpp" />
     <ClCompile Include="src\VM.cpp" />

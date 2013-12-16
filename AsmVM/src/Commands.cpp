@@ -83,8 +83,27 @@ void Commands::Print(VM * vm, const std::vector<std::string> &params)
 		printf("**UNINITIALIZED**\n");
 		break;
 	}
-
 }
+
+void Commands::GC(VM * vm, const std::vector<std::string> &params)
+{
+	vm->m_memoryManager.RunGC(vm);
+}
+
+void Commands::I_Alloc(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 3)
+	{
+		throw std::runtime_error("Invalid parameter count for command I_ALLOC");
+	}
+
+	int cnt = std::stoi(params[1]);
+	int reg = GetRegisterNumber(params[2]);
+
+	VMObject o = vm->m_memoryManager.Allocate(vm, ObjectType::INTEGER_PTR, cnt);
+	vm->m_registers[reg] = o;
+}
+
 
 int Commands::GetRegisterNumber(std::string param, bool throwOnInvalid)
 {

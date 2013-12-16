@@ -13,9 +13,12 @@ VM::VM()
 	m_instructionHandlers["i_add"] = Commands::I_Add;
 	m_instructionHandlers["i_mov"] = Commands::I_Mov;
 
-
-
 	m_instructionHandlers["print"] = Commands::Print;
+
+	m_instructionHandlers["gc"] = Commands::GC;
+	m_instructionHandlers["i_alloc"] = Commands::I_Alloc;
+
+
 }
 
 
@@ -40,6 +43,11 @@ void VM::Run(std::string fileName)
 		try
 		{
 			m_instructionHandlers[lineTokens[0]](this, lineTokens);
+			if (m_memoryManager.MustCollect())
+			{
+				m_memoryManager.RunGC(this);
+			}
+
 		}
 		catch (const std::exception &ex)
 		{

@@ -5,3 +5,12 @@ print r1
 i_add r0 r1 r2
 print r2
 print r6
+i_alloc 25000 r8
+i_alloc 4 r9
+gc
+i_mov 25 r8
+print r8
+gc
+i_mov 44 r9
+print r9
+gc
