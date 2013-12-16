@@ -64,11 +64,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileTokenizer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StringUtility.cpp" />
     <ClCompile Include="VM.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileTokenizer.h" />
     <ClInclude Include="StringUtility.h" />
     <ClInclude Include="VM.h" />
   </ItemGroup>

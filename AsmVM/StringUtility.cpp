@@ -1,4 +1,4 @@
-#include "Utility/StringUtility.h"
+#include "StringUtility.h"
 #include <cstring>
 
 std::vector<std::string> Utility::Tokenize(std::string text, std::string delimiters)
@@ -39,46 +39,4 @@ std::vector<std::string> Utility::Tokenize(std::string text, std::string delimit
 
   delete [] textBuffer;
   return tokens;
-}
-
-std::vector<std::string> Utility::HandleControlCharacters(std::string line)
-{
-  std::vector<std::string> tokens = Tokenize(line, "\n");
- 
-  return tokens;
-}
-
-
-std::vector<std::string> Utility::WrapLines(std::vector<std::string> lines, double lineWidth, double characterWidth)
-{
-  std::vector<std::string> wrappedLines;
-  for (auto line : lines)
-  {
-    auto lineTokens = Tokenize(line, " ");
-    std::string newLine;
-
-    for (auto token : lineTokens)
-    {
-      if ((newLine + " " + token).length()*characterWidth < lineWidth)
-      {
-        if (!newLine.empty())
-        {
-          newLine += " ";
-        }
-        newLine += token;
-      }
-      else
-      {
-        wrappedLines.push_back(newLine);
-        newLine = token;
-      }
-    }
-
-    if (!newLine.empty())
-    {
-      wrappedLines.push_back(newLine);
-    }
-  }
-
-  return wrappedLines;
 }
