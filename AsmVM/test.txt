@@ -1,0 +1,7 @@
+i_mov 5 r0
+i_mov 25 r1
+print r0
+print r1
+i_add r0 r1 r2
+print r2
+print r6

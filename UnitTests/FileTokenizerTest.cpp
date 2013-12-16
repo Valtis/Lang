@@ -52,7 +52,7 @@ namespace UnitTests
 			stream << "This is a single line";
 
 			vector<vector<string>> out = FileTokenizer::Tokenize(stream);
-			Assert::AreEqual("This", out[0][0].c_str());
+			Assert::AreEqual("this", out[0][0].c_str());
 			Assert::AreEqual("is", out[0][1].c_str());
 			Assert::AreEqual("a", out[0][2].c_str());
 			Assert::AreEqual("single", out[0][3].c_str());
@@ -89,7 +89,7 @@ namespace UnitTests
 			stream << "This is a single line;and this part is commented";
 
 			vector<vector<string>> out = FileTokenizer::Tokenize(stream);
-			Assert::AreEqual("This", out[0][0].c_str());
+			Assert::AreEqual("this", out[0][0].c_str());
 			Assert::AreEqual("is", out[0][1].c_str());
 			Assert::AreEqual("a", out[0][2].c_str());
 			Assert::AreEqual("single", out[0][3].c_str());
@@ -117,7 +117,7 @@ namespace UnitTests
 			stream << "This is the first line\nand this is second line with more text";
 
 			vector<vector<string>> out = FileTokenizer::Tokenize(stream);
-			Assert::AreEqual("This", out[0][0].c_str());
+			Assert::AreEqual("this", out[0][0].c_str());
 			Assert::AreEqual("is", out[0][1].c_str());
 			Assert::AreEqual("the", out[0][2].c_str());
 			Assert::AreEqual("first", out[0][3].c_str());
@@ -154,7 +154,7 @@ namespace UnitTests
 			stream << "This is the first line\n;this line is commented\nand this is second line with more text";
 
 			vector<vector<string>> out = FileTokenizer::Tokenize(stream);
-			Assert::AreEqual("This", out[0][0].c_str());
+			Assert::AreEqual("this", out[0][0].c_str());
 			Assert::AreEqual("is", out[0][1].c_str());
 			Assert::AreEqual("the", out[0][2].c_str());
 			Assert::AreEqual("first", out[0][3].c_str());
@@ -190,16 +190,16 @@ namespace UnitTests
 		TEST_METHOD(MultipleLinesTokensCorrectWhenOneLineCommentedOutInTheEnd)
 		{
 			stringstream stream;
-			stream << "This is the first line\nSecond line here;this part is commented\nand this is third line with more text";
+			stream << "This is the first line\nSecond line here;this part is commented\nand this is THIRD line with more text";
 
 			vector<vector<string>> out = FileTokenizer::Tokenize(stream);
-			Assert::AreEqual("This", out[0][0].c_str());
+			Assert::AreEqual("this", out[0][0].c_str());
 			Assert::AreEqual("is", out[0][1].c_str());
 			Assert::AreEqual("the", out[0][2].c_str());
 			Assert::AreEqual("first", out[0][3].c_str());
 			Assert::AreEqual("line", out[0][4].c_str());
 
-			Assert::AreEqual("Second", out[1][0].c_str());
+			Assert::AreEqual("second", out[1][0].c_str());
 			Assert::AreEqual("line", out[1][1].c_str());
 			Assert::AreEqual("here", out[1][2].c_str());
 

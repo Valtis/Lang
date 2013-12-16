@@ -12,6 +12,7 @@ TokenizedLines FileTokenizer::Tokenize(istream &file)
 	while (getline(file, line))
 	{
 		line = Utility::Trim(line);
+		Utility::ToLower(line);
 		line = line.substr(0, line.find(COMMENT_TOKEN));
 		if (line.empty())
 		{

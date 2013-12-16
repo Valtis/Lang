@@ -66,3 +66,14 @@ string Utility::Trim(const string &line)
 
 	return ret.substr(0, end+1);
 }
+
+void Utility::ToLower(string &line)
+{
+	for (int i = 0; i < line.length(); ++i)
+	{
+		if (line[i] >= 'A' && line[i] <= 'Z')
+		{
+			line[i] -= ('A' - 'a');
+		}
+	}
+}

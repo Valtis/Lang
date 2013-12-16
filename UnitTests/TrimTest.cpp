@@ -7,7 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace std;
 namespace UnitTests
 {
-	TEST_CLASS(TokenizerTests)
+	TEST_CLASS(TrimTest)
 	{
 	public:
 
