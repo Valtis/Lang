@@ -1,9 +1,11 @@
 #include "StringUtility.h"
 #include <cstring>
+#include "Tokens.h"
+using namespace std;
 
-std::vector<std::string> Utility::Tokenize(std::string text, std::string delimiters)
+vector<string> Utility::Tokenize(const string &text,string delimiters)
 {
-  std::vector<std::string> tokens;
+  vector<string> tokens;
   if (text.size() == 0)
   {
     return tokens;
@@ -39,4 +41,28 @@ std::vector<std::string> Utility::Tokenize(std::string text, std::string delimit
 
   delete [] textBuffer;
   return tokens;
+}
+
+
+
+string Utility::Trim(const string &line)
+{
+	
+	int beginning = line.find_first_not_of(WHITE_SPACE_TOKENS);
+
+	if (beginning == string::npos)
+	{
+		return "";
+	}
+
+	string ret = line.substr(beginning);
+	
+	int end = ret.find_last_not_of(WHITE_SPACE_TOKENS);
+	
+	if (end == string::npos)
+	{
+		end = ret.length();
+	}
+
+	return ret.substr(0, end+1);
 }
