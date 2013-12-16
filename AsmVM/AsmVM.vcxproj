@@ -15,12 +15,14 @@
     <ClInclude Include="include\StringUtility.h" />
     <ClInclude Include="include\Tokens.h" />
     <ClInclude Include="include\VM.h" />
+    <ClInclude Include="include\VMObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FileTokenizer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StringUtility.cpp" />
     <ClCompile Include="src\VM.cpp" />
+    <ClCompile Include="src\VMObject.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8645377C-F3AD-4D14-AEA1-CDE6DF84838C}</ProjectGuid>

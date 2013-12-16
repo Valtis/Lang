@@ -1,7 +1,6 @@
 #include "FileTokenizer.h"
 #include "StringUtility.h"
 #include <fstream>
-#include <iostream>
 #include "Tokens.h"
 using namespace std;
 using namespace FileTokenizer;
@@ -20,12 +19,6 @@ TokenizedLines FileTokenizer::Tokenize(istream &file)
 		}
 
 		auto tokens = Utility::Tokenize(line, " ");
-
-		for (auto t : tokens)
-		{
-			cout << t << " ";
-		}
-
 		tokenizedLines.push_back(tokens);
 
 	}

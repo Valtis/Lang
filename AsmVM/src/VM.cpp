@@ -16,5 +16,10 @@ VM::~VM()
 void VM::Run(std::string fileName)
 {
 	ifstream file(fileName);
-	FileTokenizer::Tokenize(file);
+	FileTokenizer::TokenizedLines tokens = FileTokenizer::Tokenize(file);
+
+	for (auto lineTokens : tokens)
+	{
+
+	}
 }
