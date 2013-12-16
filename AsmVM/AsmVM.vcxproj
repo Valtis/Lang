@@ -10,6 +10,17 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\FileTokenizer.h" />
+    <ClInclude Include="include\StringUtility.h" />
+    <ClInclude Include="include\VM.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\FileTokenizer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\StringUtility.cpp" />
+    <ClCompile Include="src\VM.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8645377C-F3AD-4D14-AEA1-CDE6DF84838C}</ProjectGuid>
     <RootNamespace>AsmVM</RootNamespace>
@@ -63,17 +74,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="FileTokenizer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="StringUtility.cpp" />
-    <ClCompile Include="VM.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="FileTokenizer.h" />
-    <ClInclude Include="StringUtility.h" />
-    <ClInclude Include="VM.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
