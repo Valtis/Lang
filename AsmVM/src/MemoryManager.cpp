@@ -1,7 +1,9 @@
 #include "MemoryManager.h"
 #include <cstdlib>
 #include "VM.h"
-MemoryManager::MemoryManager() : m_gcThreshold(200), m_allocatedMemory(0)
+
+#define GC_MIN_THRESHOLD 20
+MemoryManager::MemoryManager() : m_gcThreshold(20), m_allocatedMemory(0)
 {
 
 }
@@ -73,7 +75,7 @@ VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 
 void MemoryManager::RunGC(VM *vm)
 {
-	printf("Running garbage collector: Memory allocated now: %d bytes\n", m_allocatedMemory);
+	//printf("Running garbage collector: Memory allocated now: %d bytes\n", m_allocatedMemory);
 	int reg = 0;
 	for (auto &r : vm->m_registers)
 	{
@@ -85,11 +87,11 @@ void MemoryManager::RunGC(VM *vm)
 		++reg;
 	}
 
-	for (auto &var : vm->m_variables)
+	for (int i = 0; i < vm->m_stack_ptr; ++i)
 	{
-		if (IsPointer(var.second))
+		if (IsPointer(vm->m_stack[i]))
 		{
-			var.second.values.ptr.m_memory_manager_ptr->m_marked = true;
+			vm->m_stack[i].values.ptr.m_memory_manager_ptr->m_marked = true;
 		}
 	}
 
@@ -112,7 +114,10 @@ void MemoryManager::RunGC(VM *vm)
 	}
 
 
-printf("After garbage collection: Memory allocated now: %d bytes\n", m_allocatedMemory);
+	//printf("After garbage collection: Memory allocated now: %d bytes\n", m_allocatedMemory);
+	m_gcThreshold = m_allocatedPointers.size() * 2;
+	m_gcThreshold = m_gcThreshold < GC_MIN_THRESHOLD ? GC_MIN_THRESHOLD : m_gcThreshold;
+	//printf("Adjusting collection threshold to %d\n", m_gcThreshold);
 }
 
 

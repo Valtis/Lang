@@ -5,3 +5,4 @@
 
 #define REGISTER_START_TOKEN "r"
 #define NIL_TOKEN "nil"
+#define END_TOKEN "end"

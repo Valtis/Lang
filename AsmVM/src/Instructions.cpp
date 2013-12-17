@@ -4,6 +4,29 @@
 #include <stdexcept>
 
 // Integer addition
+
+int Instructions::I_ValueHelper(VM *vm, std::string param)
+{
+	int reg = GetRegisterNumber(param, false);
+	int val;
+	if (reg != -1)
+	{
+		val = vm->m_registers[reg].values.integer_value;
+	}
+	else
+	{
+		val = std::stoi(param);
+	}
+	return val;
+}
+
+void Instructions::ArithmeticOperationHelper(VM *vm, const std::vector<std::string> &params, int &destReg, int &val1, int &val2)
+{
+	destReg = GetRegisterNumber(params[3]);
+	val1 = I_ValueHelper(vm, params[1]);
+    val2 = I_ValueHelper(vm, params[2]);
+}
+
 void Instructions::I_Add(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 4)
@@ -12,13 +35,13 @@ void Instructions::I_Add(VM * vm, const std::vector<std::string> &params)
 		return;
 	}
 
-	int reg1 = GetRegisterNumber(params[1]);
-	
-	int reg2 = GetRegisterNumber(params[2]);
-	int reg3 = GetRegisterNumber(params[3]);
+	int val1;
+	int val2;
+	int reg;
+	ArithmeticOperationHelper(vm, params, reg, val1, val2);
 
-	vm->m_registers[reg3].type = ObjectType::INTEGER;
-	vm->m_registers[reg3].values.integer_value = vm->m_registers[reg1].values.integer_value + vm->m_registers[reg2].values.integer_value;
+	vm->m_registers[reg].type = ObjectType::INTEGER;
+	vm->m_registers[reg].values.integer_value = val1 + val2;
 }
 
 // Integer substraction
@@ -30,12 +53,77 @@ void Instructions::I_Sub(VM * vm, const std::vector<std::string> &params)
 		return;
 	}
 
-	int reg1 = GetRegisterNumber(params[1]);
-	int reg2 = GetRegisterNumber(params[2]);
-	int reg3 = GetRegisterNumber(params[3]);
+	int val1;
+	int val2;
+	int reg;
+	ArithmeticOperationHelper(vm, params, reg, val1, val2);
 
-	vm->m_registers[reg3].type = ObjectType::INTEGER;
-	vm->m_registers[reg3].values.integer_value = vm->m_registers[reg1].values.integer_value - vm->m_registers[reg2].values.integer_value;
+	vm->m_registers[reg].type = ObjectType::INTEGER;
+	vm->m_registers[reg].values.integer_value = val1 - val2;
+}
+
+// Integer mul
+void Instructions::I_Mul(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 4)
+	{
+		throw std::runtime_error("Invalid parameter count for command I_MUL");
+		return;
+	}
+
+	int val1;
+	int val2;
+	int reg;
+	ArithmeticOperationHelper(vm, params, reg, val1, val2);
+
+	vm->m_registers[reg].type = ObjectType::INTEGER;
+	vm->m_registers[reg].values.integer_value = val1 * val2;
+}
+
+// Integer div
+void Instructions::I_Div(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 4)
+	{
+		throw std::runtime_error("Invalid parameter count for command I_DIV");
+		return;
+	}
+
+	int val1;
+	int val2;
+	int reg;
+	ArithmeticOperationHelper(vm, params, reg, val1, val2);
+
+	if (val2 == 0)
+	{
+		throw std::runtime_error("Division by zero");
+	}
+
+	vm->m_registers[reg].type = ObjectType::INTEGER;
+	vm->m_registers[reg].values.integer_value = val1 / val2;
+}
+
+// moves value to a register
+void Instructions::I_Cmp(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 3)
+	{
+		throw std::runtime_error("Invalid parameter count for command I_CMP");
+		return;
+	}
+	int val1 = I_ValueHelper(vm, params[1]);
+	int val2 = I_ValueHelper(vm, params[2]);
+
+	vm->m_cmpResult = CmpResult::LARGER;
+
+	if (val1 < val2)
+	{
+		vm->m_cmpResult = CmpResult::SMALLER;
+	}
+	else if (val1 == val2)
+	{ 
+		vm->m_cmpResult = CmpResult::EQUAL;
+	}
 }
 
 // moves value to a register
@@ -47,7 +135,7 @@ void Instructions::I_Mov(VM * vm, const std::vector<std::string> &params)
 		return;
 	}
 
-	int reg1 = GetRegisterNumber(params[1]);
+	int reg1 = GetRegisterNumber(params[1], false);
 	int reg2 = GetRegisterNumber(params[2]);
 
 	int value;
@@ -123,6 +211,16 @@ void Instructions::I_Alloc(VM * vm, const std::vector<std::string> &params)
 }
 
 
+void Instructions::PushHelper(VM *vm, VMObject &obj)
+{
+	if (vm->m_stack_ptr == STACK_SIZE)
+	{
+		throw std::runtime_error("Stack overflow");
+	}
+	vm->m_stack[vm->m_stack_ptr++] = obj;
+
+}
+
 void Instructions::Push(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 2)
@@ -130,10 +228,7 @@ void Instructions::Push(VM * vm, const std::vector<std::string> &params)
 		throw std::runtime_error("Invalid parameter count for command PUSH");
 	}
 
-	if (vm->m_stack_ptr == STACK_SIZE)
-	{
-		throw std::runtime_error("Stack overflow");
-	}
+	
 	VMObject o;
 	if (params[1] != NIL_TOKEN)
 	{
@@ -141,7 +236,17 @@ void Instructions::Push(VM * vm, const std::vector<std::string> &params)
 		o = vm->m_registers[reg];
 	}
 
-	vm->m_stack[vm->m_stack_ptr++] = o;
+	PushHelper(vm, o);
+}
+
+void Instructions::PopHelper(VM *vm, VMObject &obj)
+{
+	if (vm->m_stack_ptr == 0)
+	{
+		throw std::runtime_error("Stack underflow");
+	}
+	--vm->m_stack_ptr;
+	obj = vm->m_stack[vm->m_stack_ptr];
 }
 
 void Instructions::Pop(VM * vm, const std::vector<std::string> &params)
@@ -150,20 +255,113 @@ void Instructions::Pop(VM * vm, const std::vector<std::string> &params)
 	{
 		throw std::runtime_error("Invalid parameter count for command POP");
 	}
-
-	if (vm->m_stack_ptr == 0)
-	{
-		throw std::runtime_error("Stack underflow");
-	}
-	--vm->m_stack_ptr;
 	
+	VMObject o;
+	PopHelper(vm, o);
 	if (params[1] != NIL_TOKEN)
 	{
 		int reg = GetRegisterNumber(params[1]);
-		vm->m_registers[reg] = vm->m_stack[vm->m_stack_ptr];
+		vm->m_registers[reg] = o;
 	}
 }
 
+void Instructions::CallSub(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command CALLSUB");
+	}
+	
+	if (vm->m_jumpositions.count(params[1]) == 0)
+	{
+		throw std::runtime_error(std::string("No such label as") + params[1]);
+	}
+
+	int oldFP = vm->m_frame_ptr;
+	int oldIP = vm->m_instructionPointer;
+	
+	vm->m_frame_ptr = vm->m_stack_ptr;
+	vm->m_instructionPointer = vm->m_jumpositions[params[1]];
+
+
+	VMObject obj;
+	obj.type = ObjectType::INTEGER;
+
+	obj.values.integer_value = oldFP;
+	PushHelper(vm, obj);
+
+	obj.values.integer_value = oldIP;
+	PushHelper(vm, obj);
+}
+
+void Instructions::Ret(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command CALLSUB");
+	}
+
+	int paramPops = std::stoi(params[1]);
+
+	VMObject framePtr = vm->m_stack[vm->m_frame_ptr];
+	VMObject instructionPtr = vm->m_stack[vm->m_frame_ptr + 1];
+		
+	vm->m_stack_ptr -= (2 + paramPops); // remove instruction & frame pointers; remove any parameters from stack
+
+	vm->m_frame_ptr = framePtr.values.integer_value;
+	vm->m_instructionPointer = instructionPtr.values.integer_value; 
+}
+
+void Instructions::Jump(VM * vm, const std::vector<std::string> &params)
+{
+	if (vm->m_jumpositions.count(params[1]) == 0)
+	{
+		throw std::runtime_error(std::string("No such label as") + params[1]);
+	}
+	vm->m_instructionPointer = vm->m_jumpositions[params[1]];
+}
+
+void Instructions::JumpNotEqual(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command JNE");
+	}
+
+	if (vm->m_cmpResult != CmpResult::NO_RESULT && vm->m_cmpResult != CmpResult::EQUAL)
+	{
+		Jump(vm, params);
+	}
+
+	vm->m_cmpResult = CmpResult::NO_RESULT;
+}
+
+
+void Instructions::StackRead(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 3)
+	{
+		throw std::runtime_error("Invalid parameter count for command STACKR");
+	}
+
+	int offset = std::stoi(params[1]);
+	int reg = GetRegisterNumber(params[2]);
+
+	vm->m_registers[reg] = vm->m_stack[vm->m_frame_ptr + offset];	
+}
+
+void Instructions::StackWrite(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 3)
+	{
+		throw std::runtime_error("Invalid parameter count for command STACKW");
+	}
+
+	int offset = std::stoi(params[1]);
+	int reg = GetRegisterNumber(params[2]);
+
+	vm->m_stack[vm->m_frame_ptr + offset] = vm->m_registers[reg];
+}
 
 int Instructions::GetRegisterNumber(std::string param, bool throwOnInvalid)
 {
