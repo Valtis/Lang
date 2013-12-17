@@ -1,0 +1,51 @@
+i_mov 5 r0
+push nil
+push r0
+callsub factorial
+pop r0
+print r0
+end
+
+; calculates the factorial of the parameter
+; if parameter is negative, does nothing
+factorial:
+
+push r0
+push r1
+
+stackr -1 r0
+
+; check if negative
+i_cmp r0 0
+jle retpos
+
+; check if 0
+jeq returnone
+
+; check if 1
+i_cmp r0 1
+jne skip ; is not zero
+
+returnone: ; pushes one into ret value stack, jumps to end
+i_mov 1 r1
+stackw -2 r1
+
+
+jump retpos
+
+skip:
+; substract 1 from current value, call the function recursively
+i_sub r0 1 r1
+push nil
+push r1
+callsub factorial
+pop r1 ; retval
+i_mul r0 r1 r0
+stackw -2 r0
+
+retpos:
+pop r1
+pop r0
+ret 1
+
+

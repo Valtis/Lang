@@ -120,8 +120,14 @@ void MemoryManager::RunGC(VM *vm)
 	//printf("Adjusting collection threshold to %d\n", m_gcThreshold);
 }
 
+void MemoryManager::DebugHeapPrint()
+{
+	printf("Current allocated memory in bytes: %d\nCurrent object gc count: %d\n", m_allocatedMemory, m_gcThreshold);
 
-bool MemoryManager::IsPointer(VMObject &o)
+}
+
+
+bool IsPointer(VMObject &o)
 {
 	return o.type == ObjectType::CHAR_PTR || o.type == ObjectType::DOUBLE_PTR || o.type == ObjectType::INTEGER_PTR;
 }

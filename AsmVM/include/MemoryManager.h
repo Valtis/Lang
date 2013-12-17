@@ -4,6 +4,7 @@
 #include "VMObject.h"
 class VM;
 
+bool IsPointer(VMObject &o);
 
 
 class MemoryManager
@@ -17,9 +18,10 @@ public:
 	bool MustCollect() { return m_allocatedPointers.size() >= m_gcThreshold;  }
 	void RunGC(VM *vm);
 
+	void DebugHeapPrint();
+
 private:
 
-	bool IsPointer(VMObject &o);
 
 	int m_gcThreshold;
 	long int m_allocatedMemory;

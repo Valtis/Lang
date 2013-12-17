@@ -13,7 +13,7 @@
 #define STACK_SIZE 1024
 class Instructions;
 
-enum CmpResult {NO_RESULT, SMALLER, EQUAL, LARGER };
+enum CmpResult {NO_RESULT, LESSER, EQUAL, GREATER };
 
 
 class VM

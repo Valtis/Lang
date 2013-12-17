@@ -1,0 +1,47 @@
+; allocating random stuff to make sure that heap works
+i_alloc 25 r15
+i_alloc 123434 r14
+
+; and allocating actual buffer here
+i_alloc 5 r0
+print_mem_mgr_debug
+print r0
+i_mov 5 r1 ; counter
+
+; write 0 2 4 6 8 to the buffer
+loop:
+
+i_sub r1 1 r1
+i_mul r1 2 r3
+
+ipw r3 r1 r0 ; value - position - register with pointer
+
+i_cmp r1 0
+jne loop
+
+callsub print_sub
+
+
+
+end
+
+
+; prints the 5 slot buffer stored in r0
+print_sub:
+push r2
+push r1
+i_mov 5 r1
+
+loop2:
+
+i_sub r1 1 r1
+
+ipr r0 r1 r2 
+print r2
+
+i_cmp r1 0
+jne loop2 
+
+pop r2
+pop r1
+ret 0

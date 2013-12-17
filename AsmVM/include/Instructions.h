@@ -23,8 +23,14 @@ public:
 	static void Print(VM * vm, const std::vector<std::string> &params);
 
 	static void I_Alloc(VM * vm, const std::vector<std::string> &params);
+	
+	static void I_ptr_write(VM * vm, const std::vector<std::string> &params);
+	
+	static void I_ptr_read(VM * vm, const std::vector<std::string> &params);
 
 	static void GC(VM * vm, const std::vector<std::string> &params);
+
+	static void MemManagerDebugPrint(VM * vm, const std::vector<std::string> &params);
 
 	static void Push(VM * vm, const std::vector<std::string> &params);
 	
@@ -41,6 +47,12 @@ public:
 	static void Jump(VM * vm, const std::vector<std::string> &params);
 
 	static void JumpNotEqual(VM * vm, const std::vector<std::string> &params);
+
+	static void JumpIfEqual(VM * vm, const std::vector<std::string> &params);
+
+	static void JumpIfLess(VM * vm, const std::vector<std::string> &params);
+
+	static void JumpIfGreater(VM * vm, const std::vector<std::string> &params);
 
 
 	

@@ -30,10 +30,17 @@ VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT)
 	m_instructionHandlers["ret"] = Instructions::Ret;
 	m_instructionHandlers["jump"] = Instructions::Jump;
 	m_instructionHandlers["jne"] = Instructions::JumpNotEqual;
-	
+	m_instructionHandlers["jeq"] = Instructions::JumpIfEqual;
+	m_instructionHandlers["jle"] = Instructions::JumpIfLess;
+	m_instructionHandlers["jgr"] = Instructions::JumpIfGreater;
 
 	m_instructionHandlers["gc"] = Instructions::GC;
+	m_instructionHandlers["print_mem_mgr_debug"] = Instructions::MemManagerDebugPrint;
+
 	m_instructionHandlers["i_alloc"] = Instructions::I_Alloc;
+	m_instructionHandlers["ipr"] = Instructions::I_ptr_read;
+	m_instructionHandlers["ipw"] = Instructions::I_ptr_write;
+
 }
 
 

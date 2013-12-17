@@ -114,11 +114,11 @@ void Instructions::I_Cmp(VM * vm, const std::vector<std::string> &params)
 	int val1 = I_ValueHelper(vm, params[1]);
 	int val2 = I_ValueHelper(vm, params[2]);
 
-	vm->m_cmpResult = CmpResult::LARGER;
+	vm->m_cmpResult = CmpResult::GREATER;
 
 	if (val1 < val2)
 	{
-		vm->m_cmpResult = CmpResult::SMALLER;
+		vm->m_cmpResult = CmpResult::LESSER;
 	}
 	else if (val1 == val2)
 	{ 
@@ -177,13 +177,10 @@ void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 		printf("%c\n", o.values.char_value);
 		break;
 	case ObjectType::INTEGER_PTR:
-		printf("%d\n", *(int *)o.values.ptr.ptr);
-		break;
 	case ObjectType::DOUBLE_PTR:
-		printf("%f\n", *(double *)o.values.ptr.ptr);
-		break;
 	case ObjectType::CHAR_PTR:
-		printf("%c\n", *(char *)o.values.ptr.ptr);
+
+		printf("%d\n", o.values.ptr.ptr); // print memory address
 		break;
 	default:
 		printf("**UNINITIALIZED**\n");
@@ -196,6 +193,12 @@ void Instructions::GC(VM * vm, const std::vector<std::string> &params)
 	vm->m_memoryManager.RunGC(vm);
 }
 
+void Instructions::MemManagerDebugPrint(VM * vm, const std::vector<std::string> &params)
+{
+	vm->m_memoryManager.DebugHeapPrint();
+}
+
+
 void Instructions::I_Alloc(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 3)
@@ -203,11 +206,69 @@ void Instructions::I_Alloc(VM * vm, const std::vector<std::string> &params)
 		throw std::runtime_error("Invalid parameter count for command I_ALLOC");
 	}
 
-	int cnt = std::stoi(params[1]);
+	int cnt = I_ValueHelper(vm, params[1]);
 	int reg = GetRegisterNumber(params[2]);
 
 	VMObject o = vm->m_memoryManager.Allocate(vm, ObjectType::INTEGER_PTR, cnt);
 	vm->m_registers[reg] = o;
+}
+
+
+void Instructions::I_ptr_write(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 4)
+	{
+		throw std::runtime_error("Invalid parameter count for command IPW");
+	}
+
+	int value = I_ValueHelper(vm, params[1]);
+	int pos = I_ValueHelper(vm, params[2]);
+	int reg = GetRegisterNumber(params[3]);
+
+	if (!IsPointer(vm->m_registers[reg]))
+	{
+		throw std::runtime_error("Pointer operation on nonpointer type attempted");
+	}
+	
+	int *ptr = (int *)vm->m_registers[reg].values.ptr.ptr;
+	
+
+	if (ptr == nullptr)
+	{
+		throw std::runtime_error("Nullpointer referenced");
+	}
+
+	ptr[pos] = value;
+
+}
+
+void Instructions::I_ptr_read(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 4)
+	{
+		throw std::runtime_error("Invalid parameter count for command IPR");
+	}
+
+	int srcReg = GetRegisterNumber(params[1]);
+	int pos = I_ValueHelper(vm, params[2]);
+	int destReg = GetRegisterNumber(params[3]);
+
+	
+	if (!IsPointer(vm->m_registers[srcReg]))
+	{
+		throw std::runtime_error("Pointer operation on nonpointer type attempted");
+	}
+
+	int *ptr = (int *)vm->m_registers[srcReg].values.ptr.ptr;
+
+
+	if (ptr == nullptr)
+	{
+		throw std::runtime_error("Nullpointer referenced");
+	}
+
+	vm->m_registers[destReg].type = ObjectType::INTEGER;
+	vm->m_registers[destReg].values.integer_value = ptr[pos];
 }
 
 
@@ -298,7 +359,7 @@ void Instructions::Ret(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 2)
 	{
-		throw std::runtime_error("Invalid parameter count for command CALLSUB");
+		throw std::runtime_error("Invalid parameter count for command RET");
 	}
 
 	int paramPops = std::stoi(params[1]);
@@ -316,7 +377,7 @@ void Instructions::Jump(VM * vm, const std::vector<std::string> &params)
 {
 	if (vm->m_jumpositions.count(params[1]) == 0)
 	{
-		throw std::runtime_error(std::string("No such label as") + params[1]);
+		throw std::runtime_error(std::string("No such label as ") + params[1]);
 	}
 	vm->m_instructionPointer = vm->m_jumpositions[params[1]];
 }
@@ -332,10 +393,46 @@ void Instructions::JumpNotEqual(VM * vm, const std::vector<std::string> &params)
 	{
 		Jump(vm, params);
 	}
-
-	vm->m_cmpResult = CmpResult::NO_RESULT;
 }
 
+void Instructions::JumpIfEqual(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command JEQ");
+	}
+
+	if (vm->m_cmpResult != CmpResult::NO_RESULT && vm->m_cmpResult == CmpResult::EQUAL)
+	{
+		Jump(vm, params);
+	}
+}
+
+void Instructions::JumpIfLess(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command JLE");
+	}
+
+	if (vm->m_cmpResult != CmpResult::NO_RESULT && vm->m_cmpResult == CmpResult::LESSER)
+	{
+		Jump(vm, params);
+	}
+}
+
+void Instructions::JumpIfGreater(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command JGR");
+	}
+
+	if (vm->m_cmpResult != CmpResult::NO_RESULT && vm->m_cmpResult == CmpResult::GREATER)
+	{
+		Jump(vm, params);
+	}
+}
 
 void Instructions::StackRead(VM * vm, const std::vector<std::string> &params)
 {

@@ -60,4 +60,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="factorial.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="memalloctest.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="memtest.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="pow.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="simple.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>

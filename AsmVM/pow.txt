@@ -1,0 +1,42 @@
+; 2^5
+i_mov 5 r0
+i_mov 2 r1
+i_mov 12345 r2 ; for checking that register is properly saved
+push nil ; return value
+push r0 ; parameter
+push r1 ; parameter
+callsub pow
+pop r0
+print r0
+print r1
+print r2 ; should still be 12345 assuming register value was properly saved
+end
+
+; x^y
+; assumes that y >= 0
+pow:
+; save register values
+push r0
+push r1
+push r2
+; stackr reads from stack, parameter relative to frame pointer
+stackr -1 r0 ; 2
+stackr -2 r1 ; 5
+
+i_mov 1 r2 ; initialize result register
+
+loop:
+i_sub r1 1 r1 
+i_mul r2 r0 r2
+i_cmp r1 0
+jne loop
+
+
+stackw -3 r2 ; writes to a stack location, relative to the frame pointer
+
+; return registers to previous state
+pop r2
+pop r1
+pop r0
+
+ret 2 ; pop parameters from the stack
