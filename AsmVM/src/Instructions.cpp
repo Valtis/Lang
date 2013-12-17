@@ -1,10 +1,10 @@
-#include "Commands.h"
+#include "Instructions.h"
 #include "VM.h"
 #include "Tokens.h"
 #include <stdexcept>
 
 // Integer addition
-void Commands::I_Add(VM * vm, const std::vector<std::string> &params)
+void Instructions::I_Add(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 4)
 	{
@@ -13,6 +13,7 @@ void Commands::I_Add(VM * vm, const std::vector<std::string> &params)
 	}
 
 	int reg1 = GetRegisterNumber(params[1]);
+	
 	int reg2 = GetRegisterNumber(params[2]);
 	int reg3 = GetRegisterNumber(params[3]);
 
@@ -20,8 +21,25 @@ void Commands::I_Add(VM * vm, const std::vector<std::string> &params)
 	vm->m_registers[reg3].values.integer_value = vm->m_registers[reg1].values.integer_value + vm->m_registers[reg2].values.integer_value;
 }
 
+// Integer substraction
+void Instructions::I_Sub(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 4)
+	{
+		throw std::runtime_error("Invalid parameter count for command I_SUB");
+		return;
+	}
+
+	int reg1 = GetRegisterNumber(params[1]);
+	int reg2 = GetRegisterNumber(params[2]);
+	int reg3 = GetRegisterNumber(params[3]);
+
+	vm->m_registers[reg3].type = ObjectType::INTEGER;
+	vm->m_registers[reg3].values.integer_value = vm->m_registers[reg1].values.integer_value - vm->m_registers[reg2].values.integer_value;
+}
+
 // moves value to a register
-void Commands::I_Mov(VM * vm, const std::vector<std::string> &params)
+void Instructions::I_Mov(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 3)
 	{
@@ -29,7 +47,7 @@ void Commands::I_Mov(VM * vm, const std::vector<std::string> &params)
 		return;
 	}
 
-	int reg1 = GetRegisterNumber(params[1], false);
+	int reg1 = GetRegisterNumber(params[1]);
 	int reg2 = GetRegisterNumber(params[2]);
 
 	int value;
@@ -50,7 +68,7 @@ void Commands::I_Mov(VM * vm, const std::vector<std::string> &params)
 
 
 
-void Commands::Print(VM * vm, const std::vector<std::string> &params)
+void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 2)
 	{
@@ -85,12 +103,12 @@ void Commands::Print(VM * vm, const std::vector<std::string> &params)
 	}
 }
 
-void Commands::GC(VM * vm, const std::vector<std::string> &params)
+void Instructions::GC(VM * vm, const std::vector<std::string> &params)
 {
 	vm->m_memoryManager.RunGC(vm);
 }
 
-void Commands::I_Alloc(VM * vm, const std::vector<std::string> &params)
+void Instructions::I_Alloc(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 3)
 	{
@@ -105,7 +123,49 @@ void Commands::I_Alloc(VM * vm, const std::vector<std::string> &params)
 }
 
 
-int Commands::GetRegisterNumber(std::string param, bool throwOnInvalid)
+void Instructions::Push(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command PUSH");
+	}
+
+	if (vm->m_stack_ptr == STACK_SIZE)
+	{
+		throw std::runtime_error("Stack overflow");
+	}
+	VMObject o;
+	if (params[1] != NIL_TOKEN)
+	{
+		int reg = GetRegisterNumber(params[1]);
+		o = vm->m_registers[reg];
+	}
+
+	vm->m_stack[vm->m_stack_ptr++] = o;
+}
+
+void Instructions::Pop(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command POP");
+	}
+
+	if (vm->m_stack_ptr == 0)
+	{
+		throw std::runtime_error("Stack underflow");
+	}
+	--vm->m_stack_ptr;
+	
+	if (params[1] != NIL_TOKEN)
+	{
+		int reg = GetRegisterNumber(params[1]);
+		vm->m_registers[reg] = vm->m_stack[vm->m_stack_ptr];
+	}
+}
+
+
+int Instructions::GetRegisterNumber(std::string param, bool throwOnInvalid)
 {
 	
 	for (int i = 0; i < REGISTER_CNT; ++i)
@@ -124,3 +184,4 @@ int Commands::GetRegisterNumber(std::string param, bool throwOnInvalid)
 
 	return -1;
 }
+

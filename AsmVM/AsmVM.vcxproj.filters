@@ -30,10 +30,10 @@
     <ClInclude Include="include\VMObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Commands.h">
+    <ClInclude Include="include\MemoryManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\MemoryManager.h">
+    <ClInclude Include="include\Instructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,10 +53,10 @@
     <ClCompile Include="src\VMObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Commands.cpp">
+    <ClCompile Include="src\MemoryManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MemoryManager.cpp">
+    <ClCompile Include="src\Instructions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

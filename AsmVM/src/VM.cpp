@@ -1,22 +1,23 @@
 #include "VM.h"
 #include "FileTokenizer.h"
-#include "Commands.h"
+#include "Instructions.h"
 #include <cstdio>
 #include <fstream>
 
 
 using namespace std;
 
-VM::VM()
+VM::VM() : m_stack_ptr(0), m_frame_ptr(0)
 {
 
-	m_instructionHandlers["i_add"] = Commands::I_Add;
-	m_instructionHandlers["i_mov"] = Commands::I_Mov;
+	m_instructionHandlers["i_add"] = Instructions::I_Add;
+	m_instructionHandlers["i_sub"] = Instructions::I_Sub;
+	m_instructionHandlers["i_mov"] = Instructions::I_Mov;
 
-	m_instructionHandlers["print"] = Commands::Print;
+	m_instructionHandlers["print"] = Instructions::Print;
 
-	m_instructionHandlers["gc"] = Commands::GC;
-	m_instructionHandlers["i_alloc"] = Commands::I_Alloc;
+	m_instructionHandlers["gc"] = Instructions::GC;
+	m_instructionHandlers["i_alloc"] = Instructions::I_Alloc;
 
 
 }

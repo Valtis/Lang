@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Commands.h" />
+    <ClInclude Include="include\Instructions.h" />
     <ClInclude Include="include\FileTokenizer.h" />
     <ClInclude Include="include\MemoryManager.h" />
     <ClInclude Include="include\StringUtility.h" />
@@ -20,7 +20,7 @@
     <ClInclude Include="include\VMObject.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Commands.cpp" />
+    <ClCompile Include="src\Instructions.cpp" />
     <ClCompile Include="src\FileTokenizer.cpp" />
     <ClCompile Include="src\MemoryManager.cpp" />
     <ClCompile Include="src\main.cpp" />

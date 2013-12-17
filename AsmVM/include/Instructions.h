@@ -1,12 +1,16 @@
 #pragma once
 #include <vector>
 #include <string>
+
 class VM;
 
-class Commands
+class Instructions
 {
 public:
+
 	static void I_Add(VM * vm, const std::vector<std::string> &params);
+
+	static void I_Sub(VM * vm, const std::vector<std::string> &params);
 
 	static void I_Mov(VM *vm, const std::vector<std::string> &params);
 
@@ -15,6 +19,11 @@ public:
 	static void I_Alloc(VM * vm, const std::vector<std::string> &params);
 
 	static void GC(VM * vm, const std::vector<std::string> &params);
+
+	static void Push(VM * vm, const std::vector<std::string> &params);
+	
+	static void Pop(VM * vm, const std::vector<std::string> &params);
+
 
 
 private:

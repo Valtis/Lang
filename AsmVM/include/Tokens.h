@@ -4,3 +4,4 @@
 #define WHITE_SPACE_TOKENS " \n\t\r"
 
 #define REGISTER_START_TOKEN "r"
+#define NIL_TOKEN "nil"

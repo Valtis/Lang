@@ -10,7 +10,8 @@
 
 #include "VmObject.h"
 #define REGISTER_CNT 16
-class Commands;
+#define STACK_SIZE 1024
+class Instructions;
 
 class VM
 {
@@ -20,15 +21,18 @@ public:
 
 	void Run(std::string file);
 private:
-	friend class Commands;
+	friend class Instructions;
 	friend class MemoryManager;
 	typedef std::vector<std::string> &InstrParam;
 	
 	std::unordered_map < std::string, std::function <void(VM *, InstrParam)>> m_instructionHandlers;
-	std::unordered_map<std::string, VMObject> m_variables;
-	std::array<VMObject, REGISTER_CNT> m_registers;
-	MemoryManager m_memoryManager;
 	
-	std::stack<VMObject> m_stack;
+	std::array<VMObject, REGISTER_CNT> m_registers;
+	std::array<VMObject, 1024> m_stack;
+	int m_stack_ptr; // points to a next free stack spot
+
+	int m_frame_ptr;
+	
+	MemoryManager m_memoryManager;
 };
 
