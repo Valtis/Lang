@@ -24,7 +24,7 @@ void Instructions::ArithmeticOperationHelper(VM *vm, const std::vector<std::stri
 {
 	destReg = GetRegisterNumber(params[3]);
 	val1 = I_ValueHelper(vm, params[1]);
-    val2 = I_ValueHelper(vm, params[2]);
+	val2 = I_ValueHelper(vm, params[2]);
 }
 
 void Instructions::I_Add(VM * vm, const std::vector<std::string> &params)
@@ -103,6 +103,25 @@ void Instructions::I_Div(VM * vm, const std::vector<std::string> &params)
 	vm->m_registers[reg].values.integer_value = val1 / val2;
 }
 
+void Instructions::I_Rand(VM *vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 4)
+	{
+		throw std::runtime_error("Invalid parameter count for command I_RAND");
+		return;
+	}
+
+	int val1;
+	int val2;
+	int reg;
+	ArithmeticOperationHelper(vm, params, reg, val1, val2);
+
+	vm->m_registers[reg].type = ObjectType::INTEGER;
+
+	std::uniform_int_distribution<int> dist(val1, val2);
+	vm->m_registers[reg].values.integer_value = dist(vm->m_generator);
+}
+
 // moves value to a register
 void Instructions::I_Cmp(VM * vm, const std::vector<std::string> &params)
 {
@@ -121,7 +140,7 @@ void Instructions::I_Cmp(VM * vm, const std::vector<std::string> &params)
 		vm->m_cmpResult = CmpResult::LESSER;
 	}
 	else if (val1 == val2)
-	{ 
+	{
 		vm->m_cmpResult = CmpResult::EQUAL;
 	}
 }
@@ -158,9 +177,30 @@ void Instructions::I_Mov(VM * vm, const std::vector<std::string> &params)
 
 void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 {
-	if (params.size() != 2)
+	if (params.size() < 2 || (params.size() > 2 && params[1][0] != '@'))
 	{
 		throw std::runtime_error("Invalid parameter count for command PRINT");
+	}
+	// dirty hack, needs to be fixed!
+	if (params[1][0] == '@')
+	{
+
+		for (int i = 1; i < params.size(); ++i)
+		{
+
+			if (i == 1)
+			{
+				printf("%s", params[1].substr(1, params[1].length()).c_str());
+			}
+			else
+			{
+
+				printf(" %s", params[i].c_str());
+			}
+		}
+		printf("\n");
+
+		return;
 	}
 
 	VMObject &o = vm->m_registers[GetRegisterNumber(params[1])];
@@ -229,9 +269,19 @@ void Instructions::I_ptr_write(VM * vm, const std::vector<std::string> &params)
 	{
 		throw std::runtime_error("Pointer operation on nonpointer type attempted");
 	}
-	
+
 	int *ptr = (int *)vm->m_registers[reg].values.ptr.ptr;
-	
+	int ptrSize = vm->m_registers[reg].values.ptr.size;
+	if (pos < 0)
+	{
+		throw std::runtime_error("Pointer write underflow " + std::to_string(pos));
+	}
+	else if (pos >= ptrSize / sizeof(int))
+	{
+		throw std::runtime_error("Pointer write overflow: write to index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
+	}
+
+
 
 	if (ptr == nullptr)
 	{
@@ -253,18 +303,27 @@ void Instructions::I_ptr_read(VM * vm, const std::vector<std::string> &params)
 	int pos = I_ValueHelper(vm, params[2]);
 	int destReg = GetRegisterNumber(params[3]);
 
-	
+
 	if (!IsPointer(vm->m_registers[srcReg]))
 	{
 		throw std::runtime_error("Pointer operation on nonpointer type attempted");
 	}
 
 	int *ptr = (int *)vm->m_registers[srcReg].values.ptr.ptr;
-
+	int ptrSize = vm->m_registers[srcReg].values.ptr.size;
 
 	if (ptr == nullptr)
 	{
 		throw std::runtime_error("Nullpointer referenced");
+	}
+
+	if (pos < 0)
+	{
+		throw std::runtime_error("Pointer read underflow: index " + std::to_string(pos));
+	}
+	else if (pos >= ptrSize / sizeof(int))
+	{
+		throw std::runtime_error("Pointer read overflow: read from index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
 	}
 
 	vm->m_registers[destReg].type = ObjectType::INTEGER;
@@ -289,7 +348,7 @@ void Instructions::Push(VM * vm, const std::vector<std::string> &params)
 		throw std::runtime_error("Invalid parameter count for command PUSH");
 	}
 
-	
+
 	VMObject o;
 	if (params[1] != NIL_TOKEN)
 	{
@@ -316,7 +375,7 @@ void Instructions::Pop(VM * vm, const std::vector<std::string> &params)
 	{
 		throw std::runtime_error("Invalid parameter count for command POP");
 	}
-	
+
 	VMObject o;
 	PopHelper(vm, o);
 	if (params[1] != NIL_TOKEN)
@@ -332,7 +391,7 @@ void Instructions::CallSub(VM * vm, const std::vector<std::string> &params)
 	{
 		throw std::runtime_error("Invalid parameter count for command CALLSUB");
 	}
-	
+
 	if (vm->m_jumpositions.count(params[1]) == 0)
 	{
 		throw std::runtime_error(std::string("No such label as") + params[1]);
@@ -340,7 +399,7 @@ void Instructions::CallSub(VM * vm, const std::vector<std::string> &params)
 
 	int oldFP = vm->m_frame_ptr;
 	int oldIP = vm->m_instructionPointer;
-	
+
 	vm->m_frame_ptr = vm->m_stack_ptr;
 	vm->m_instructionPointer = vm->m_jumpositions[params[1]];
 
@@ -366,11 +425,11 @@ void Instructions::Ret(VM * vm, const std::vector<std::string> &params)
 
 	VMObject framePtr = vm->m_stack[vm->m_frame_ptr];
 	VMObject instructionPtr = vm->m_stack[vm->m_frame_ptr + 1];
-		
+
 	vm->m_stack_ptr -= (2 + paramPops); // remove instruction & frame pointers; remove any parameters from stack
 
 	vm->m_frame_ptr = framePtr.values.integer_value;
-	vm->m_instructionPointer = instructionPtr.values.integer_value; 
+	vm->m_instructionPointer = instructionPtr.values.integer_value;
 }
 
 void Instructions::Jump(VM * vm, const std::vector<std::string> &params)
@@ -444,7 +503,18 @@ void Instructions::StackRead(VM * vm, const std::vector<std::string> &params)
 	int offset = std::stoi(params[1]);
 	int reg = GetRegisterNumber(params[2]);
 
-	vm->m_registers[reg] = vm->m_stack[vm->m_frame_ptr + offset];	
+	int pos = vm->m_frame_ptr + offset;
+	if (pos >= vm->m_stack.size())
+	{
+		throw std::runtime_error("STACKR stack overflow");
+	}
+
+	if (pos < 0)
+	{
+		throw std::runtime_error("STACKR stack underflow");
+	}
+
+	vm->m_registers[reg] = vm->m_stack[pos];
 }
 
 void Instructions::StackWrite(VM * vm, const std::vector<std::string> &params)
@@ -457,12 +527,23 @@ void Instructions::StackWrite(VM * vm, const std::vector<std::string> &params)
 	int offset = std::stoi(params[1]);
 	int reg = GetRegisterNumber(params[2]);
 
-	vm->m_stack[vm->m_frame_ptr + offset] = vm->m_registers[reg];
+	int pos = vm->m_frame_ptr + offset;
+	if (pos >= vm->m_stack.size())
+	{
+		throw std::runtime_error("STACKR stack overflow");
+	}
+
+	if (pos < 0)
+	{
+		throw std::runtime_error("STACKR stack underflow");
+	}
+
+	vm->m_stack[pos] = vm->m_registers[reg];
 }
 
 int Instructions::GetRegisterNumber(std::string param, bool throwOnInvalid)
 {
-	
+
 	for (int i = 0; i < REGISTER_CNT; ++i)
 	{
 		std::string reg = REGISTER_START_TOKEN + std::to_string(i);

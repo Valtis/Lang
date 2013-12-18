@@ -6,6 +6,7 @@
 #include <stack>
 #include <unordered_map>
 #include <functional>
+#include <random>
 #include "MemoryManager.h"
 
 #include "VmObject.h"
@@ -42,5 +43,7 @@ private:
 	CmpResult m_cmpResult;
 	
 	MemoryManager m_memoryManager;
+
+	std::mt19937 m_generator;
 };
 

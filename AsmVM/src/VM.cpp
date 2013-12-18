@@ -4,7 +4,7 @@
 #include "Tokens.h"
 #include <cstdio>
 #include <fstream>
-
+#include <ctime>
 
 
 using namespace std;
@@ -12,11 +12,14 @@ using namespace std;
 VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT)
 {
 
+	m_generator.seed(time(nullptr));
+
 	m_instructionHandlers["i_add"] = Instructions::I_Add;
 	m_instructionHandlers["i_sub"] = Instructions::I_Sub;
 	m_instructionHandlers["i_mul"] = Instructions::I_Mul;
 	m_instructionHandlers["i_mov"] = Instructions::I_Mov;
 	m_instructionHandlers["i_cmp"] = Instructions::I_Cmp;
+	m_instructionHandlers["i_rand"] = Instructions::I_Rand;
 
 	m_instructionHandlers["print"] = Instructions::Print;
 	
@@ -82,7 +85,14 @@ void VM::Run(std::string fileName)
 		}
 		catch (const std::exception &ex)
 		{
-			printf(ex.what());
+			printf("Error at line");
+
+			for (string & t : tokens[m_instructionPointer])
+			{
+				printf(" %s", t.c_str());
+			}
+
+			printf(": %s\n", ex.what());
 			return;
 		}
 

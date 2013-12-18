@@ -16,6 +16,8 @@ public:
 
 	static void I_Div(VM * vm, const std::vector<std::string> &params);
 
+	static void I_Rand(VM *vm, const std::vector<std::string> &params);
+
 	static void I_Cmp(VM * vm, const std::vector<std::string> &params);
 
 	static void I_Mov(VM *vm, const std::vector<std::string> &params);

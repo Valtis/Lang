@@ -3,15 +3,18 @@
 #include "VM.h"
 
 #define GC_MIN_THRESHOLD 20
-MemoryManager::MemoryManager() : m_gcThreshold(20), m_allocatedMemory(0)
+MemoryManager::MemoryManager() : m_gcThreshold(20), m_allocatedMemorySizeInBytes(0)
 {
 
 }
 
 MemoryManager::~MemoryManager()
 {
-
-
+	for (auto &ptr : m_allocatedPointers)
+	{
+		free(ptr->ptr);
+		free(ptr);
+	}
 }
 
 
@@ -51,7 +54,7 @@ VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 	managedPtr->m_marked = false;
 	managedPtr->m_memory_manager_ptr = managedPtr;
 	managedPtr->size = cnt*size;
-	m_allocatedMemory += managedPtr->size;
+	m_allocatedMemorySizeInBytes += managedPtr->size;
 
 
 	managedPtr->ptr = malloc(managedPtr->size);
@@ -100,7 +103,7 @@ void MemoryManager::RunGC(VM *vm)
 	{
 		if (!(*it)->m_marked)
 		{
-			m_allocatedMemory -= (*it)->size;
+			m_allocatedMemorySizeInBytes -= (*it)->size;
 			free((*it)->ptr);
 			free(*it);
 			it = m_allocatedPointers.erase(it);
@@ -122,8 +125,8 @@ void MemoryManager::RunGC(VM *vm)
 
 void MemoryManager::DebugHeapPrint()
 {
-	printf("Current allocated memory in bytes: %d\nCurrent object gc count: %d\n", m_allocatedMemory, m_gcThreshold);
-
+	printf("Current allocated memory in bytes: %d\ncurrent allocated object count:%d\nCurrent gc threshold: %d\n", 
+		m_allocatedMemorySizeInBytes, m_allocatedPointers.size(), m_gcThreshold);
 }
 
 
