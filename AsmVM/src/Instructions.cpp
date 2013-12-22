@@ -194,7 +194,6 @@ void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 			}
 			else
 			{
-
 				printf(" %s", params[i].c_str());
 			}
 		}
@@ -208,6 +207,7 @@ void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 	switch (o.type)
 	{
 	case ObjectType::INTEGER:
+	
 		printf("%d\n", o.values.integer_value);
 		break;
 	case ObjectType::DOUBLE:
@@ -219,7 +219,6 @@ void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 	case ObjectType::INTEGER_PTR:
 	case ObjectType::DOUBLE_PTR:
 	case ObjectType::CHAR_PTR:
-
 		printf("%d\n", o.values.ptr.ptr); // print memory address
 		break;
 	default:
@@ -281,11 +280,9 @@ void Instructions::I_ptr_write(VM * vm, const std::vector<std::string> &params)
 		throw std::runtime_error("Pointer write overflow: write to index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
 	}
 
-
-
 	if (ptr == nullptr)
 	{
-		throw std::runtime_error("Nullpointer referenced");
+		throw std::runtime_error("Nullpointer dereferenced");
 	}
 
 	ptr[pos] = value;
@@ -314,7 +311,7 @@ void Instructions::I_ptr_read(VM * vm, const std::vector<std::string> &params)
 
 	if (ptr == nullptr)
 	{
-		throw std::runtime_error("Nullpointer referenced");
+		throw std::runtime_error("Nullpointer dereferenced");
 	}
 
 	if (pos < 0)
@@ -394,7 +391,7 @@ void Instructions::CallSub(VM * vm, const std::vector<std::string> &params)
 
 	if (vm->m_jumpositions.count(params[1]) == 0)
 	{
-		throw std::runtime_error(std::string("No such label as") + params[1]);
+		throw std::runtime_error(std::string("No such label as ") + params[1]);
 	}
 
 	int oldFP = vm->m_frame_ptr;

@@ -1,0 +1,304 @@
+; MAIN PROGRAM STARTS HERE
+; create array with size of 20
+i_mov 20 r0 ; array size
+i_alloc r0 r1
+print_mem_mgr_debug
+push r1
+push r0
+callsub fill_array_with_random_numbers
+push r1
+push r0
+
+print @Unsorted array:
+callsub print_array
+
+push r1
+push r0
+
+callsub qsort
+
+push r1
+push r0
+print @Sorted array:
+callsub print_array
+
+; see that temporary arrays are released properly
+
+print_mem_mgr_debug
+print @Running garbage collector
+gc
+
+print_mem_mgr_debug
+
+
+end ; terminates program
+; MAIN PROGRAM ENDS HERE
+
+
+; fills given array with random number - does not check that array size is positive
+; parameters: pointer to array, array size
+; returns: nothing
+fill_array_with_random_numbers:
+push r0
+push r1
+push r2
+
+stackr -2 r1  ; pointer to array
+stackr -1 r0 ; array size
+
+; check the array size
+i_cmp r0 1
+jle randomize_end
+
+rand_loop:
+i_sub r0 1 r0 ; reduce counter by one
+i_rand 0 100 r2 ; generate random number between [0, 100] and store it in r2
+
+ipw r2 r0 r1 ; write value of r2 to offeset of r0 to a pointer in r1
+
+i_cmp r0 0
+jne rand_loop
+
+
+randomize_end:
+
+pop r2
+pop r1
+pop r0
+ret 2
+
+; prints the values of given array
+; parameters: pointer to array, array size
+; returns: nothing
+print_array:
+push r0
+push r1
+push r2
+push r3
+
+
+
+stackr -2 r1  ; pointer to array
+stackr -1 r0 ; array size
+
+; check the array size
+i_cmp r0 1
+jle print_end
+
+i_mov 0 r3 ; initialize counter
+
+print_loop:
+
+ipr r1 r3 r2 ; read from pointer r1 from offset r0 and store result into r2
+print r2
+
+i_add r3 1 r3 ; add 1 to the counter
+i_cmp r3 r0
+jne print_loop
+
+
+print_end:
+pop r3
+pop r2
+pop r1
+pop r0
+ret 2
+
+; sorts array to ascending order by using qsort - does not check that array size is positive
+; does not sort inplace as I want to see that garbace collector works well
+; pivot is the leftmost element
+; parameters: pointer to array, array size
+; returns: nothing
+qsort:
+
+push r0 
+push r1
+push r2
+push r3
+push r4 
+push r5
+push r6
+push r7
+push r8
+push r9
+push r10
+
+
+
+stackr -2 r1  ; pointer to array
+stackr -1 r0 ; array size
+
+; check if array size is 1 or smaller
+; compare to two, jump to end if size is < 2
+i_cmp r0 2
+jle qsort_end
+
+; allocate arrays for smaller and greater values than pivot - worst case scenario is that one array will contain all elements
+i_alloc r0 r2 ; lesser
+i_alloc r0 r3 ; greater
+
+i_mov 1 r4  ; initialize index for main array - we skip the pivot value here
+i_mov 0 r5 ; initialize index for lesser array
+i_mov 0 r6 ; initialize index for greater array
+
+; copy pivot value to r7
+ipr r1 0 r7
+
+; copy values smaller or equal than pivto to array 'less'
+; else move them to 'greater'
+
+q_sort_loop:
+
+; copy current value to r8
+ipr r1 r4 r8 
+; compare to pivot
+i_cmp r8 r7
+
+jgr q_sort_is_greater ; if is greater, jump to a part where this is handled
+
+ipw r8 r5 r2 ; write value r8 to r2[r5]
+i_add r5 1 r5 ; update index
+
+jump q_sort_loop_advance jump over the code that handles the greater part
+q_sort_is_greater:  
+
+ipw r8 r6 r3 ; write r8 to r3[r6]
+i_add r6 1 r6 ; update index
+
+
+q_sort_loop_advance:
+i_add r4 1 r4 ; add 1 to the main index
+i_cmp r4 r0 ; compare main index to array size - terminate when equal
+jne q_sort_loop
+
+;*****debug 
+; print the smaller array 
+;print @
+;print @array states before recursive call
+
+
+;print @pivot
+;print r7
+;print @smaller
+;push r2
+;push r5
+;callsub print_array
+;print @greater
+;push r3
+;push r6
+;callsub print_array
+
+; *******end debug
+
+
+; sort smaller
+push r2
+push r5
+callsub qsort
+
+; sort greater
+push r3
+push r6
+callsub qsort
+
+
+; merge arrays
+i_mov 0 r9 ; index for smaller\greater
+i_mov 0 r4 ; indexing for the main array
+
+; skip if less-array size is 0
+i_cmp r5 0
+jeq pivot_write
+
+
+; *********** debug code **************
+; print the arrays before sorting
+;print @before merge
+;print @pivot
+;print r7
+;print @smaller
+;push r2
+;push r5
+;callsub print_array
+;print @greater
+;push r3
+;push r6
+;callsub print_array
+;print @
+; ********** debug code end ***************
+
+q_sort_merge_smaller_loop:
+
+ipr r2 r9 r10; read from 'lesser' array to r10
+ipw r10 r4 r1 ; write it to original array
+
+i_add r4 1 r4
+i_add r9 1 r9
+i_cmp r9 r5 
+jne q_sort_merge_smaller_loop
+
+pivot_write:
+
+ipw r7 r4 r1 ; write the pivot to original array
+i_add r4 1 r4 ; move the index
+
+
+
+; merge the 'greater' array
+; jump over if array length is zero
+i_cmp r6 0
+jeq qsort_end
+
+i_mov 0 r9 ; index for greater
+
+; if we have reached the end of the primary array - jump to end
+
+i_cmp r4 r0
+jgr qsort_end
+
+q_sort_merge_larger_loop:
+
+ipr r3 r9 r10; read from 'greater' array to r10
+ipw r10 r4 r1 ; write it to original array
+
+i_add r4 1 r4
+i_add r9 1 r9
+i_cmp r9 r6 
+jne q_sort_merge_larger_loop
+
+
+qsort_end:
+; *********** debug code **************
+; print the arrays before sorting
+;print @after merge
+;print @merged array size
+;print r4
+;print @merged array
+;push r1
+;push r0 
+;callsub print_array
+;print @
+; ********** debug code end ***************
+
+
+pop r10
+pop r9
+pop r8
+pop r7
+pop r6
+pop r5
+pop r4
+pop r3
+pop r2
+pop r1
+pop r0
+
+
+ret 2
+
+
+
+
+
+
+

@@ -23,8 +23,6 @@ struct VMObject
 {
 	VMObject();
 
-	
-
 	ObjectType type;
 	Values values;
 };

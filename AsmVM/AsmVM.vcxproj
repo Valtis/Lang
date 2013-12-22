@@ -33,6 +33,7 @@
     <Text Include="memalloctest.txt" />
     <Text Include="memtest.txt" />
     <Text Include="pow.txt" />
+    <Text Include="qsort.txt" />
     <Text Include="simple.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

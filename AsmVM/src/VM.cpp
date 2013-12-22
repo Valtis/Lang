@@ -11,7 +11,6 @@ using namespace std;
 
 VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT)
 {
-
 	m_generator.seed(time(nullptr));
 
 	m_instructionHandlers["i_add"] = Instructions::I_Add;
