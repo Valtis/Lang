@@ -35,7 +35,7 @@ end ; terminates program
 ; MAIN PROGRAM ENDS HERE
 
 
-; fills given array with random number - does not check that array size is positive
+; fills given array with random number
 ; parameters: pointer to array, array size
 ; returns: nothing
 fill_array_with_random_numbers:
