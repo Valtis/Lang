@@ -35,7 +35,7 @@ end ; terminates program
 ; MAIN PROGRAM ENDS HERE
 
 
-; fills given array with random number
+; fills given array with random numbers
 ; parameters: pointer to array, array size
 ; returns: nothing
 fill_array_with_random_numbers:
@@ -104,7 +104,7 @@ pop r1
 pop r0
 ret 2
 
-; sorts array to ascending order by using qsort - does not check that array size is positive
+; sorts array to ascending order by using qsort
 ; does not sort inplace as I want to see that garbace collector works well
 ; pivot is the leftmost element
 ; parameters: pointer to array, array size
@@ -171,26 +171,6 @@ i_add r4 1 r4 ; add 1 to the main index
 i_cmp r4 r0 ; compare main index to array size - terminate when equal
 jne q_sort_loop
 
-;*****debug 
-; print the smaller array 
-;print @
-;print @array states before recursive call
-
-
-;print @pivot
-;print r7
-;print @smaller
-;push r2
-;push r5
-;callsub print_array
-;print @greater
-;push r3
-;push r6
-;callsub print_array
-
-; *******end debug
-
-
 ; sort smaller
 push r2
 push r5
@@ -209,23 +189,6 @@ i_mov 0 r4 ; indexing for the main array
 ; skip if less-array size is 0
 i_cmp r5 0
 jeq pivot_write
-
-
-; *********** debug code **************
-; print the arrays before sorting
-;print @before merge
-;print @pivot
-;print r7
-;print @smaller
-;push r2
-;push r5
-;callsub print_array
-;print @greater
-;push r3
-;push r6
-;callsub print_array
-;print @
-; ********** debug code end ***************
 
 q_sort_merge_smaller_loop:
 
@@ -268,18 +231,6 @@ jne q_sort_merge_larger_loop
 
 
 qsort_end:
-; *********** debug code **************
-; print the arrays before sorting
-;print @after merge
-;print @merged array size
-;print r4
-;print @merged array
-;push r1
-;push r0 
-;callsub print_array
-;print @
-; ********** debug code end ***************
-
 
 pop r10
 pop r9
