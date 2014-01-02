@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Instructions">
+      <UniqueIdentifier>{ef5d0ead-3013-40ee-9130-3399f9049d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Instructions">
+      <UniqueIdentifier>{9374e719-9f8b-4680-88dc-e3a6e1773d5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FileTokenizer.h">
@@ -36,6 +42,18 @@
     <ClInclude Include="include\Instructions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Instructions\Instruction.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Instructions\IntegerAddition.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Instructions\Operand.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Instructions\IntegerArithmeticOperation.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FileTokenizer.cpp">
@@ -58,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="src\Instructions.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Instructions\IntegerAddition.cpp">
+      <Filter>Source Files\Instructions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

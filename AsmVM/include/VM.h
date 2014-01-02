@@ -17,20 +17,19 @@ class Instructions;
 enum CmpResult {NO_RESULT, LESSER, EQUAL, GREATER };
 
 
-class VM
+struct VM
 {
 public:
 	VM();
 	~VM();
 
 	void Run(std::string file);
-private:
+
 
 	typedef std::vector<std::string> &InstrParam;
 	void ExtractJumpPositions(std::vector<std::vector<std::string>> &tokens);
 
-	friend class Instructions;
-	friend class MemoryManager;
+
 	
 	std::unordered_map<std::string, int> m_jumpositions;
 	std::unordered_map < std::string, std::function <void(VM *, InstrParam)>> m_instructionHandlers;
