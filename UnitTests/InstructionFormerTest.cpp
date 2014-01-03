@@ -4,6 +4,7 @@
 #include "Instructions/ArithmeticOperations.h"
 #include "Instructions/JumpCommands.h"
 #include "Instructions/RegisterManipulationOperations.h"
+#include "Instructions/StackOperations.h"
 #include "Instructions/Print.h"
 #include "Tokens.h"
 #include <vector>
@@ -266,11 +267,39 @@ namespace UnitTests
 			Assert::IsNotNull(dynamic_cast <Move<int> *>(instructions[0].get()));
 		}
 
-		TEST_METHOD(InstructionFormerFormsPrintCorrectly)
+		TEST_METHOD(InstructionFormerFormsPrintCorrectlyWithText)
 		{
 			vector<vector<string>> fileTokens = { { PRINT, "@this", "is", "text" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Print *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsPrintCorrectlyWithRegister)
+		{
+			vector<vector<string>> fileTokens = { { PRINT, "r3" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Print *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsPushCorrectlyWhenNil)
+		{
+			vector<vector<string>> fileTokens = { { PUSH, "nil" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Push *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsPushCorrectlyWhenRegister)
+		{
+			vector<vector<string>> fileTokens = { { PUSH, "r9" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Push *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsPopCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { POP, "r9" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Pop *>(instructions[0].get()));
 		}
 	};
 }

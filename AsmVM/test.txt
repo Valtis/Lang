@@ -30,7 +30,6 @@ i_mul r2 r0 r2
 i_cmp r1 0
 jne loop
 
-
 stackw -3 r2 ; writes to a stack location, relative to the frame pointer
 
 ; return registers to previous state

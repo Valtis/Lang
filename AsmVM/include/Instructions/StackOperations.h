@@ -34,21 +34,29 @@ private:
 	int m_register;
 };
 
-/*
-void Instructions::Push(VM * vm, const std::vector<std::string> &params)
+class Pop : public Instruction
 {
-	if (params.size() != 2)
+public:
+	Pop(int reg)
 	{
-		throw std::runtime_error("Invalid parameter count for command PUSH");
+		// -1 has a special meaning of pushing nil value into stack
+		if (reg < 0 || reg >= REGISTER_CNT)
+		{
+			throw std::runtime_error("Invalid register specified: " + std::to_string(reg));
+		}
+		m_register = reg;
 	}
 
+	void Execute(VM *vm) override
+	{
+		vm->m_registers[m_register] = vm->Pop();
+	}
 
+private:
+	int m_register;
+};
 
-
-	PushHelper(vm, o);
-}
-
-
+/*
 void Instructions::Pop(VM * vm, const std::vector<std::string> &params)
 {
 	if (params.size() != 2)

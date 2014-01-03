@@ -94,6 +94,7 @@
     <ClCompile Include="JumpTests.cpp" />
     <ClCompile Include="OperandTest.cpp" />
     <ClCompile Include="RegisterManipulationOperationTest.cpp" />
+    <ClCompile Include="StackOperationsTest.cpp" />
     <ClCompile Include="ToLowerTest.cpp" />
     <ClCompile Include="TrimTest.cpp" />
     <ClCompile Include="stdafx.cpp">

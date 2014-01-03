@@ -124,6 +124,12 @@ unique_ptr<Instruction> ConstructPushInstruction(vector<string> tokens)
 	return unique_ptr<Instruction>(new Push(ParseRegister(tokens[1])));
 }
 
+unique_ptr<Instruction> ConstructPopInstruction(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 2);
+
+	return unique_ptr<Instruction>(new Pop(ParseRegister(tokens[1])));
+}
 
 
 
@@ -197,6 +203,10 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		else if (tokens[0] == PUSH)
 		{
 			instructions.push_back(ConstructPushInstruction(tokens));
+		}
+		else if (tokens[0] == POP)
+		{
+			instructions.push_back(ConstructPopInstruction(tokens));
 		}
 		else 
 		{
