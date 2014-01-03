@@ -1,7 +1,8 @@
 #pragma once
-#include "VM.h"
-#include "Instructions\ArithmeticOperationBase.h"
 
+#include "VM.h"
+#include "Instructions/ArithmeticOperationBase.h"
+#include "Instructions/TypeSetters.h"
 
 template <typename Type>
 class Addition : public ArithmeticOperationBase<Type, Addition<Type>>
@@ -16,7 +17,7 @@ public:
 	void Execute(VM *vm)
 	{
 		VMObject o;
-		SetType<Type>(o);
+		TypeSetter::SetType<Type>(o);
 		*(Type *)(&o.values) = m_operand1.GetValue(vm) + m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
@@ -35,7 +36,7 @@ public:
 	void Execute(VM *vm)
 	{
 		VMObject o;
-		SetType<Type>(o);
+		TypeSetter::SetType<Type>(o);
 		*(Type *)(&o.values) = m_operand1.GetValue(vm) - m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
@@ -54,7 +55,7 @@ public:
 	void Execute(VM *vm)
 	{
 		VMObject o;
-		SetType<Type>(o);
+		TypeSetter::SetType<Type>(o);
 		*(Type *)(&o.values) = m_operand1.GetValue(vm) * m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
@@ -74,7 +75,7 @@ public:
 	void Execute(VM *vm)
 	{
 		VMObject o;
-		SetType<Type>(o);
+		TypeSetter::SetType<Type>(o);
 
 		if (m_operand2.GetValue(vm) == 0)
 		{
@@ -99,7 +100,7 @@ public:
 	void Execute(VM *vm)
 	{
 		VMObject o;
-		SetType<int>(o);
+		TypeSetter::SetType<int>(o);
 		std::uniform_int_distribution<int> dist(m_operand1.GetValue(vm), m_operand2.GetValue(vm));
 		o.values.integer_value = dist(vm->m_generator);
 		vm->m_registers[m_storeRegister] = o;
@@ -109,7 +110,7 @@ public:
 class RandomizeDouble : public ArithmeticOperationBase<double, RandomizeDouble>
 {
 public:
-	RandomizeDouble(Operand<double> operand1, Operand<double> operand2, double storeRegister) :
+	RandomizeDouble(Operand<double> operand1, Operand<double> operand2, int storeRegister) :
 		ArithmeticOperationBase(operand1, operand2, storeRegister)
 	{
 
@@ -118,7 +119,7 @@ public:
 	void Execute(VM *vm)
 	{
 		VMObject o;
-		SetType<double>(o);
+		TypeSetter::SetType<double>(o);
 		std::uniform_real_distribution<double> dist(m_operand1.GetValue(vm), m_operand2.GetValue(vm));
 		o.values.double_value = dist(vm->m_generator);
 		vm->m_registers[m_storeRegister] = o;

@@ -26,33 +26,6 @@ public:
 
 
 protected:
-	
-
-	template <typename Type>
-	void SetType(VMObject &o)
-	{
-		// should be handled in specialized methods
-		static_assert(false);
-	}
-
-	template <>
-	void SetType<int>(VMObject &o)
-	{
-		o.type = ObjectType::INTEGER;
-	}
-	
-	template <>
-	void SetType<char>(VMObject &o)
-	{
-		o.type = ObjectType::CHAR;
-	}
-
-	template <>
-	void SetType<double>(VMObject &o)
-	{
-		o.type = ObjectType::DOUBLE;
-	}
-
 	Operand<Type> m_operand1;
 	Operand<Type> m_operand2;
 	int m_storeRegister;

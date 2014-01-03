@@ -29,8 +29,16 @@ void VM::Run(string fileName)
 
 
 	ExtractJumpPositions(tokens);
-	vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(tokens);
-	
+	vector<std::unique_ptr<Instruction>> instructions;
+	try 
+	{
+		instructions = InstructionFormer::FormInstructions(tokens);
+	} 
+	catch (const exception &ex)
+	{
+		printf("Parse error: %s", ex.what());
+		return;
+	}
 	
 
 	while (m_instruction_ptr < instructions.size() && m_endExecution == false)

@@ -3,6 +3,8 @@
 #include "InstructionFormer.h"
 #include "Instructions/ArithmeticOperations.h"
 #include "Instructions/JumpCommands.h"
+#include "Instructions/RegisterManipulationOperations.h"
+#include "Instructions/Print.h"
 #include "Tokens.h"
 #include <vector>
 #include <string>
@@ -248,6 +250,27 @@ namespace UnitTests
 			vector<vector<string>> fileTokens = { { RET, "0" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Ret *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerCompareCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { INTEGER_COMPARE, "r0", "2" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Compare<int> *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerMoveCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { INTEGER_MOVE, "5", "r2" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Move<int> *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsPrintCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { PRINT, "@this", "is", "text" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Print *>(instructions[0].get()));
 		}
 	};
 }

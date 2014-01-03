@@ -4,6 +4,8 @@
 
 #include "Instructions/ArithmeticOperations.h"
 #include "Instructions/JumpCommands.h"
+#include "Instructions/RegisterManipulationOperations.h"
+#include "Instructions/Print.h"
 // todo - replace runtime_errors with ParseExceptions and improve error messages
 using namespace std;
 
@@ -15,6 +17,14 @@ int ParseRegister(string value)
 	}
 
 	return value[1] - '0';
+}
+
+void CheckParameterCount(vector<string> tokens, int expected)
+{
+	if (tokens.size() != expected)
+	{
+		throw runtime_error("Invalid parameter count for operation " + tokens[0]);
+	}
 }
 
 void SetIntegerOperand(Operand<int> &operand, const string &value)
@@ -39,11 +49,8 @@ void SetIntegerOperand(Operand<int> &operand, const string &value)
 template <typename T>
 unique_ptr<Instruction> ConstructIntegerOperation(vector<string> tokens)
 {
+	CheckParameterCount(tokens, 4);
 	
-	if (tokens.size() != 4)
-	{
-		throw runtime_error("Invalid parameter count for operation " + tokens[0]);
-	}
 	Operand<int> o1, o2;
 	SetIntegerOperand(o1, tokens[1]);
 	SetIntegerOperand(o2, tokens[2]);
@@ -51,27 +58,58 @@ unique_ptr<Instruction> ConstructIntegerOperation(vector<string> tokens)
 	return unique_ptr<Instruction>(new T(o1, o2, ParseRegister(tokens[3])));
 }
 
-template <typename T>
-unique_ptr<Instruction> ConstructJumpCommand(vector<string> tokens)
+unique_ptr<Instruction> ConstructIntegerCompareInstruction(vector<string> tokens)
 {
-	if (tokens.size() != 2)
-	{
-		runtime_error("Invalid parameter count for operation " + tokens[0]);
-	}
+	CheckParameterCount(tokens, 3);
+
+	Operand<int> o1, o2;
+
+	SetIntegerOperand(o1, tokens[1]);
+	SetIntegerOperand(o2, tokens[2]);
+
+
+	return unique_ptr<Instruction>(new Compare<int>(o1, o2));
+}
+
+unique_ptr<Instruction> ConstructIntegerMoveInstruction(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 3);
+
+	Operand<int> o1;
+
+	SetIntegerOperand(o1, tokens[1]);
+	
+	return unique_ptr<Instruction>(new Move<int>(o1, ParseRegister(tokens[2])));
+}
+
+template <typename T>
+unique_ptr<Instruction> ConstructJumpInstruction(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 2);
 	return unique_ptr<Instruction>(new T(tokens[1]));
 }
 
-unique_ptr<Instruction> ConstructReturnCommand(vector<string> tokens)
+unique_ptr<Instruction> ConstructReturnInstruction(vector<string> tokens)
 {
-	if (tokens.size() != 2)
-	{
-		runtime_error("Invalid parameter count for operation " + tokens[0]);
-	}
+	CheckParameterCount(tokens, 2);
 
 	return unique_ptr<Instruction>(new Ret(stoi(tokens[1])));
 }
 
+unique_ptr<Instruction> ConstructPrintInstruction(vector<string> tokens)
+{
+	if (tokens.size() <= 1)
+	{
+		throw runtime_error("Invalid parameter count for operation " + tokens[0]);
+	}
 
+	if (tokens[1][0] == PRINT_TEXT_TOKEN)
+	{
+		return unique_ptr<Instruction>(new Print(tokens));
+	}
+
+	return unique_ptr<Instruction>(new Print(stoi(tokens[1])));
+}
 
 
 vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector<vector<string>> &tokenizedLines)
@@ -101,33 +139,45 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		{
 			instructions.push_back(ConstructIntegerOperation<RandomizeInteger>(tokens));
 		}
+		else if (tokens[0] == INTEGER_COMPARE)
+		{
+			instructions.push_back(ConstructIntegerCompareInstruction(tokens));
+		}
+		else if (tokens[0] == INTEGER_MOVE)
+		{
+			instructions.push_back(ConstructIntegerMoveInstruction(tokens));
+		}
 		else if (tokens[0] == JUMP)
 		{
-			instructions.push_back(ConstructJumpCommand<Jump>(tokens));
+			instructions.push_back(ConstructJumpInstruction<Jump>(tokens));
 		}
 		else if (tokens[0] == JUMP_IF_EQUAL)
 		{
-			instructions.push_back(ConstructJumpCommand<JumpIfEqual>(tokens));
+			instructions.push_back(ConstructJumpInstruction<JumpIfEqual>(tokens));
 		}
 		else if (tokens[0] == JUMP_NOT_EQUAL)
 		{
-			instructions.push_back(ConstructJumpCommand<JumpNotEqual>(tokens));
+			instructions.push_back(ConstructJumpInstruction<JumpNotEqual>(tokens));
 		}
 		else if (tokens[0] == JUMP_IF_GREATER)
 		{
-			instructions.push_back(ConstructJumpCommand<JumpIfGreater>(tokens));
+			instructions.push_back(ConstructJumpInstruction<JumpIfGreater>(tokens));
 		}
 		else if (tokens[0] == JUMP_IF_LESSER)
 		{
-			instructions.push_back(ConstructJumpCommand<JumpIfLess>(tokens));
+			instructions.push_back(ConstructJumpInstruction<JumpIfLess>(tokens));
 		}
 		else if (tokens[0] == CALLSUB)
 		{
-			instructions.push_back(ConstructJumpCommand<CallSub>(tokens));
+			instructions.push_back(ConstructJumpInstruction<CallSub>(tokens));
 		}
 		else if (tokens[0] == RET)
 		{
-			instructions.push_back(ConstructReturnCommand(tokens));
+			instructions.push_back(ConstructReturnInstruction(tokens));
+		}
+		else if (tokens[0] == PRINT)
+		{
+			instructions.push_back(ConstructPrintInstruction(tokens));
 		}
 		else 
 		{

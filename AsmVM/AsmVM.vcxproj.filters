@@ -63,6 +63,15 @@
     <ClInclude Include="include\Instructions\IntegerPointerOperations.h">
       <Filter>Header Files\Instructions</Filter>
     </ClInclude>
+    <ClInclude Include="include\Instructions\RegisterManipulationOperations.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Instructions\TypeSetters.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Instructions\Print.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FileTokenizer.cpp">
