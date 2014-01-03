@@ -88,8 +88,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InstructionFormerTest.cpp" />
     <ClCompile Include="IntegerArithmeticInstructionTest.cpp" />
     <ClCompile Include="FileTokenizerTest.cpp" />
+    <ClCompile Include="JumpTests.cpp" />
     <ClCompile Include="OperandTest.cpp" />
     <ClCompile Include="ToLowerTest.cpp" />
     <ClCompile Include="TrimTest.cpp" />
