@@ -6,21 +6,21 @@ print_mem_mgr_debug
 push r1
 push r0
 callsub fill_array_with_random_numbers
-;push r1
-;push r0
 
-;print @Unsorted array:
-;callsub print_array
+print @Unsorted array:
 
 push r1
 push r0
+callsub print_array
 
+push r1
+push r0
 callsub qsort
 
-;push r1
-;push r0
-;print @Sorted array:
-;callsub print_array
+print @Sorted array:
+push r1
+push r0
+callsub print_array
 
 ; see that temporary arrays are released properly
 
