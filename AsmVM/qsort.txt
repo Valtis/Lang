@@ -1,5 +1,5 @@
 ; MAIN PROGRAM STARTS HERE
-; create array with size of 20
+; create array with size of 4000
 i_mov 4000 r0 ; array size
 i_alloc r0 r1
 print_mem_mgr_debug
