@@ -30,10 +30,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -52,10 +52,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -82,10 +82,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 			
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -112,10 +112,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -142,10 +142,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -172,10 +172,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -206,10 +206,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -239,10 +239,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Addition<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Addition<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -262,10 +262,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -284,10 +284,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -314,10 +314,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -344,10 +344,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -373,10 +373,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -401,9 +401,9 @@ namespace UnitTests
 			op1.SetRegister(readRegister);
 			op2.SetValue(value2);
 			
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 			
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -434,10 +434,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -467,10 +467,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Substraction<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Substraction<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -489,10 +489,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -511,10 +511,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -541,10 +541,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -571,10 +571,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -600,10 +600,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -628,9 +628,9 @@ namespace UnitTests
 			op1.SetRegister(readRegister);
 			op2.SetValue(value2);
 
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -661,10 +661,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -694,10 +694,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Multiplication<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Multiplication<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -716,10 +716,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -738,10 +738,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 			VM vm;
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -770,10 +770,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -800,10 +800,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister);
 
 
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -829,10 +829,10 @@ namespace UnitTests
 			op2.SetValue(value2);
 
 
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -857,9 +857,9 @@ namespace UnitTests
 			op1.SetRegister(readRegister);
 			op2.SetValue(value2);
 
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
@@ -890,10 +890,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(static_cast<int>(ObjectType::INTEGER), static_cast<int>(vm.m_registers[storeRegister].type));
 		}
 
@@ -923,10 +923,10 @@ namespace UnitTests
 			op2.SetRegister(readRegister2);
 
 
-			std::unique_ptr<Instruction> addition(new Division<int>(op1, op2, storeRegister));
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, storeRegister));
 
 
-			addition->Execute(&vm);
+			instruction->Execute(&vm);
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
