@@ -105,3 +105,56 @@ private:
 		}
 	}
 };
+
+class CallSub : public Jump
+{
+public:
+	CallSub(const std::string &label) : Jump(label)
+	{
+
+	}
+private:
+	void OnExecute(VM *vm) override
+	{
+
+		int oldFP = vm->m_frame_ptr;
+		int oldIP = vm->m_instructionPointer;
+
+		VMObject o;
+		o.type = ObjectType::INTEGER;
+		o.values.integer_value = oldFP;
+
+		vm->Push(o);
+
+		o.values.integer_value = oldIP;
+		vm->Push(o);
+
+
+		vm->m_frame_ptr = vm->m_stack_ptr;
+
+		Jump::OnExecute(vm);
+	}
+
+
+};
+
+
+/*
+
+void Instructions::Ret(VM * vm, const std::vector<std::string> &params)
+{
+	if (params.size() != 2)
+	{
+		throw std::runtime_error("Invalid parameter count for command RET");
+	}
+
+	int paramPops = std::stoi(params[1]);
+
+	VMObject framePtr = vm->m_stack[vm->m_frame_ptr];
+	VMObject instructionPtr = vm->m_stack[vm->m_frame_ptr + 1];
+
+	vm->m_stack_ptr -= (2 + paramPops); // remove instruction & frame pointers; remove any parameters from stack
+
+	vm->m_frame_ptr = framePtr.values.integer_value;
+	vm->m_instructionPointer = instructionPtr.values.integer_value;
+}*/

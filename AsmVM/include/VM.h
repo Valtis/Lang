@@ -10,7 +10,7 @@
 
 #include "VmObject.h"
 #define REGISTER_CNT 16
-#define STACK_SIZE 1024
+#define STACK_SIZE 2048
 class Instructions;
 
 enum CmpResult {NO_RESULT, LESSER, EQUAL, GREATER };
@@ -23,6 +23,11 @@ public:
 	~VM();
 
 	void Run(std::string file);
+
+
+	void Push(VMObject &o);
+
+	VMObject Pop();
 
 
 	typedef std::vector<std::string> &InstrParam;

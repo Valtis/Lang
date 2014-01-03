@@ -7,10 +7,6 @@ struct VMObject;
 class Instructions
 {
 public:
-
-
-	static void I_Rand(VM *vm, const std::vector<std::string> &params);
-
 	static void I_Cmp(VM * vm, const std::vector<std::string> &params);
 
 	static void I_Mov(VM *vm, const std::vector<std::string> &params);
@@ -37,7 +33,7 @@ public:
 
 	static void CallSub(VM * vm, const std::vector<std::string> &params);
 
-	static void Ret(VM * vm, const std::vector<std::string> &params);	
+	static void Ret(VM * vm, const std::vector<std::string> &params);
 
 private:
 	static int GetRegisterNumber(std::string, bool throwOnInvalid = true);
