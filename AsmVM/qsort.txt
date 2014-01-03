@@ -154,7 +154,7 @@ ipr r1 r4 r8
 ; compare to pivot
 i_cmp r8 r7
 
-jgr q_sort_is_greater ; if is greater, jump to a part where this is handled
+jgre q_sort_is_greater ; if is greater, jump to a part where this is handled
 
 ipw r8 r5 r2 ; write value r8 to r2[r5]
 i_add r5 1 r5 ; update index
@@ -217,7 +217,7 @@ i_mov 0 r9 ; index for greater
 ; if we have reached the end of the primary array - jump to end
 
 i_cmp r4 r0
-jgr qsort_end
+jgre qsort_end
 
 q_sort_merge_larger_loop:
 

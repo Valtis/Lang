@@ -16,6 +16,7 @@
     <ClInclude Include="include\FileTokenizer.h" />
     <ClInclude Include="include\Instructions\Instruction.h" />
     <ClInclude Include="include\Instructions\ArithmeticOperationBase.h" />
+    <ClInclude Include="include\Instructions\IntegerPointerOperations.h" />
     <ClInclude Include="include\Instructions\JumpCommands.h" />
     <ClInclude Include="include\Instructions\Operand.h" />
     <ClInclude Include="include\Instructions\ArithmeticOperations.h" />

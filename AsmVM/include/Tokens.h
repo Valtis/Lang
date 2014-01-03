@@ -12,3 +12,11 @@
 #define INTEGER_SUBSTRACTION "i_sub"
 #define INTEGER_MULTIPLICATION "i_mul"
 #define INTEGER_DIVISION "i_div"
+#define INTEGER_RANDOMIZE "i_rand"
+
+#define JUMP "jump"
+#define JUMP_IF_EQUAL "jeq"
+#define JUMP_IF_GREATER "jgre"
+#define JUMP_IF_LESSER "jle"
+#define JUMP_NOT_EQUAL "jneq"
+

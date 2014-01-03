@@ -13,6 +13,11 @@ public:
 
 	virtual ~Jump() { }
 
+	std::string GetLabel()
+	{
+		return m_label;
+	}
+
 	virtual void Execute(VM *vm) override
 	{
 		if (vm->m_jumpositions.count(m_label) == 0)

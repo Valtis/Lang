@@ -930,5 +930,73 @@ namespace UnitTests
 			Assert::AreEqual(result, vm.m_registers[storeRegister].values.integer_value);
 		}
 
+		TEST_METHOD(IntegerDivisionThrowsIfDivisorIsValueAndZero)
+		{
+
+			VM vm;
+
+			Operand<int> op1;
+			Operand<int> op2;
+
+
+			op1.SetValue(25);
+			op2.SetValue(0);
+
+
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, 3));
+			
+			Assert::ExpectException<runtime_error>([&]() { instruction->Execute(&vm); });
+		}
+
+		TEST_METHOD(IntegerDivisionThrowsIfDivisorIsRegisterAndZero)
+		{
+			VM vm;
+
+			Operand<int> op1;
+			Operand<int> op2;
+
+			vm.m_registers[10].values.integer_value = 0;
+
+			op1.SetValue(25);
+			op2.SetRegister(10);
+
+
+			std::unique_ptr<Instruction> instruction(new Division<int>(op1, op2, 3));
+
+			Assert::ExpectException<runtime_error>([&]() { instruction->Execute(&vm); });
+		}
+
+		TEST_METHOD(IntegerRandomizeWorks)
+		{
+			VM vm;
+
+			Operand<int> op1;
+			Operand<int> op2;
+						
+			op1.SetValue(0);
+			op2.SetValue(10);
+
+
+			std::unique_ptr<Instruction> instruction(new RandomizeInteger(op1, op2, 3));
+			instruction->Execute(&vm);
+			Assert::IsTrue(vm.m_registers[3].values.integer_value >= 0 && vm.m_registers[3].values.integer_value <= 10);
+		}
+
+		TEST_METHOD(FloatingRandomizeWorks)
+		{
+			VM vm;
+
+			Operand<double> op1;
+			Operand<double> op2;
+
+			op1.SetValue(0.0);
+			op2.SetValue(10.0);
+
+
+			std::unique_ptr<Instruction> instruction(new RandomizeDouble(op1, op2, 3));
+			instruction->Execute(&vm);
+			Assert::IsTrue(vm.m_registers[3].values.double_value >= 0.0 && vm.m_registers[3].values.integer_value <= 10.0);
+		}
+
 	};
 }
