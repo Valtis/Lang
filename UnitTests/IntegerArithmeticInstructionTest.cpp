@@ -995,7 +995,7 @@ namespace UnitTests
 
 			std::unique_ptr<Instruction> instruction(new RandomizeDouble(op1, op2, 3));
 			instruction->Execute(&vm);
-			Assert::IsTrue(vm.m_registers[3].values.double_value >= 0.0 && vm.m_registers[3].values.integer_value <= 10.0);
+			Assert::IsTrue(vm.m_registers[3].values.double_value >= 0.0 && vm.m_registers[3].values.double_value <= 10.0);
 		}
 
 	};

@@ -61,6 +61,18 @@ unique_ptr<Instruction> ConstructJumpCommand(vector<string> tokens)
 	return unique_ptr<Instruction>(new T(tokens[1]));
 }
 
+unique_ptr<Instruction> ConstructReturnCommand(vector<string> tokens)
+{
+	if (tokens.size() != 2)
+	{
+		runtime_error("Invalid parameter count for operation " + tokens[0]);
+	}
+
+	return unique_ptr<Instruction>(new Ret(stoi(tokens[1])));
+}
+
+
+
 
 vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector<vector<string>> &tokenizedLines)
 {
@@ -85,6 +97,10 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		{
 			instructions.push_back(ConstructIntegerOperation<Division<int>>(tokens));
 		}
+		else if (tokens[0] == INTEGER_RANDOMIZE)
+		{
+			instructions.push_back(ConstructIntegerOperation<RandomizeInteger>(tokens));
+		}
 		else if (tokens[0] == JUMP)
 		{
 			instructions.push_back(ConstructJumpCommand<Jump>(tokens));
@@ -105,9 +121,13 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		{
 			instructions.push_back(ConstructJumpCommand<JumpIfLess>(tokens));
 		}
-		else if (tokens[0] == INTEGER_RANDOMIZE)
+		else if (tokens[0] == CALLSUB)
 		{
-			instructions.push_back(ConstructIntegerOperation<RandomizeInteger>(tokens));
+			instructions.push_back(ConstructJumpCommand<CallSub>(tokens));
+		}
+		else if (tokens[0] == RET)
+		{
+			instructions.push_back(ConstructReturnCommand(tokens));
 		}
 		else 
 		{

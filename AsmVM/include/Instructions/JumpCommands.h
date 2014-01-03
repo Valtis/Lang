@@ -30,7 +30,7 @@ public:
 protected:
 	virtual void OnExecute(VM *vm)
 	{
-		vm->m_instructionPointer = vm->m_jumpositions[m_label];
+		vm->m_instruction_ptr = vm->m_jumpositions[m_label];
 	}
 
 private:
@@ -118,23 +118,56 @@ private:
 	{
 
 		int oldFP = vm->m_frame_ptr;
-		int oldIP = vm->m_instructionPointer;
+		int oldIP = vm->m_instruction_ptr;
+		vm->m_frame_ptr = vm->m_stack_ptr;
 
 		VMObject o;
 		o.type = ObjectType::INTEGER;
 		o.values.integer_value = oldFP;
+
 
 		vm->Push(o);
 
 		o.values.integer_value = oldIP;
 		vm->Push(o);
 
-
-		vm->m_frame_ptr = vm->m_stack_ptr;
-
 		Jump::OnExecute(vm);
 	}
 
+
+};
+
+class Ret : public Instruction
+{
+public:
+	Ret(int pops)
+	{
+		if (pops < 0)
+		{
+			throw std::runtime_error("Invalid pop count for return instruction");
+		}
+
+		m_pops = pops;
+
+	}
+	void Execute(VM *vm) override
+	{
+		VMObject framePtr = vm->m_stack[vm->m_frame_ptr];
+		VMObject instructionPtr = vm->m_stack[vm->m_frame_ptr + 1];
+
+		vm->m_stack_ptr -= (2 + m_pops); // remove instruction & frame pointers; remove any parameters from stack
+
+		if (vm->m_stack_ptr < 0)
+		{
+			throw std::runtime_error("Negative stack pointer after returning from function call");
+		}
+
+		vm->m_frame_ptr = framePtr.values.integer_value;
+		vm->m_instruction_ptr = instructionPtr.values.integer_value;
+	}
+
+private:
+	int m_pops;
 
 };
 
@@ -143,18 +176,5 @@ private:
 
 void Instructions::Ret(VM * vm, const std::vector<std::string> &params)
 {
-	if (params.size() != 2)
-	{
-		throw std::runtime_error("Invalid parameter count for command RET");
-	}
-
-	int paramPops = std::stoi(params[1]);
-
-	VMObject framePtr = vm->m_stack[vm->m_frame_ptr];
-	VMObject instructionPtr = vm->m_stack[vm->m_frame_ptr + 1];
-
-	vm->m_stack_ptr -= (2 + paramPops); // remove instruction & frame pointers; remove any parameters from stack
-
-	vm->m_frame_ptr = framePtr.values.integer_value;
-	vm->m_instructionPointer = instructionPtr.values.integer_value;
+	
 }*/

@@ -236,5 +236,18 @@ namespace UnitTests
 			Assert::IsNotNull(dynamic_cast <RandomizeInteger *>(instructions[0].get()));
 		}
 
+		TEST_METHOD(InstructionFormerFormsCallSubCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { CALLSUB, "foobar" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <CallSub *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsRetCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { RET, "0" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <Ret *>(instructions[0].get()));
+		}
 	};
 }

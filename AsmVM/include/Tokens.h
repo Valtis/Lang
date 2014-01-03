@@ -20,3 +20,5 @@
 #define JUMP_IF_LESSER "jle"
 #define JUMP_NOT_EQUAL "jneq"
 
+#define CALLSUB "callsub"
+#define  RET "ret"

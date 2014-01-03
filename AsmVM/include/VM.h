@@ -39,7 +39,7 @@ public:
 	std::array<VMObject, 1024> m_stack;
 
 	int m_stack_ptr; // points to a next free stack spot
-	int m_instructionPointer;
+	int m_instruction_ptr;
 	int m_frame_ptr;
 	CmpResult m_cmpResult;
 	

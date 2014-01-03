@@ -10,7 +10,7 @@
 
 using namespace std;
 
-VM::VM() : m_stack_ptr(0), m_instructionPointer(0), m_frame_ptr(0), m_cmpResult(NO_RESULT), m_endExecution(false)
+VM::VM() : m_stack_ptr(0), m_instruction_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT), m_endExecution(false)
 {
 	m_generator.seed(time(nullptr));
 
@@ -33,11 +33,11 @@ void VM::Run(string fileName)
 	
 	
 
-	while (m_instructionPointer < instructions.size() && m_endExecution == false)
+	while (m_instruction_ptr < instructions.size() && m_endExecution == false)
 	{
 		try
 		{
-			instructions[m_instructionPointer]->Execute(this);
+			instructions[m_instruction_ptr]->Execute(this);
 			if (m_memoryManager.MustCollect())
 			{
 				m_memoryManager.RunGC(this);
@@ -50,7 +50,7 @@ void VM::Run(string fileName)
 			return;
 		}
 
-		++m_instructionPointer;
+		++m_instruction_ptr;
 	}
 }
 
