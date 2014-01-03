@@ -1,26 +1,26 @@
 ; MAIN PROGRAM STARTS HERE
 ; create array with size of 20
-i_mov 20 r0 ; array size
+i_mov 4000 r0 ; array size
 i_alloc r0 r1
 print_mem_mgr_debug
 push r1
 push r0
 callsub fill_array_with_random_numbers
-push r1
-push r0
+;push r1
+;push r0
 
-print @Unsorted array:
-callsub print_array
+;print @Unsorted array:
+;callsub print_array
 
 push r1
 push r0
 
 callsub qsort
 
-push r1
-push r0
-print @Sorted array:
-callsub print_array
+;push r1
+;push r0
+;print @Sorted array:
+;callsub print_array
 
 ; see that temporary arrays are released properly
 
@@ -43,7 +43,7 @@ push r0
 push r1
 push r2
 
-stackr -2 r1  ; pointer to array
+stackr -2 r1 ; pointer to array
 stackr -1 r0 ; array size
 
 ; check the array size
@@ -78,7 +78,7 @@ push r3
 
 
 
-stackr -2 r1  ; pointer to array
+stackr -2 r1 ; pointer to array
 stackr -1 r0 ; array size
 
 ; check the array size
@@ -111,11 +111,11 @@ ret 2
 ; returns: nothing
 qsort:
 
-push r0 
+push r0
 push r1
 push r2
 push r3
-push r4 
+push r4
 push r5
 push r6
 push r7
@@ -125,7 +125,7 @@ push r10
 
 
 
-stackr -2 r1  ; pointer to array
+stackr -2 r1 ; pointer to array
 stackr -1 r0 ; array size
 
 ; check if array size is 1 or smaller
@@ -137,7 +137,7 @@ jle qsort_end
 i_alloc r0 r2 ; lesser
 i_alloc r0 r3 ; greater
 
-i_mov 1 r4  ; initialize index for main array - we skip the pivot value here
+i_mov 1 r4 ; initialize index for main array - we skip the pivot value here
 i_mov 0 r5 ; initialize index for lesser array
 i_mov 0 r6 ; initialize index for greater array
 
@@ -150,7 +150,7 @@ ipr r1 0 r7
 q_sort_loop:
 
 ; copy current value to r8
-ipr r1 r4 r8 
+ipr r1 r4 r8
 ; compare to pivot
 i_cmp r8 r7
 
@@ -159,8 +159,8 @@ jgre q_sort_is_greater ; if is greater, jump to a part where this is handled
 ipw r8 r5 r2 ; write value r8 to r2[r5]
 i_add r5 1 r5 ; update index
 
-jump q_sort_loop_advance jump over the code that handles the greater part
-q_sort_is_greater:  
+jump q_sort_loop_advance ;jump over the code that handles the greater part
+q_sort_is_greater:
 
 ipw r8 r6 r3 ; write r8 to r3[r6]
 i_add r6 1 r6 ; update index
@@ -181,7 +181,6 @@ push r3
 push r6
 callsub qsort
 
-
 ; merge arrays
 i_mov 0 r9 ; index for smaller\greater
 i_mov 0 r4 ; indexing for the main array
@@ -190,6 +189,7 @@ i_mov 0 r4 ; indexing for the main array
 i_cmp r5 0
 jeq pivot_write
 
+
 q_sort_merge_smaller_loop:
 
 ipr r2 r9 r10; read from 'lesser' array to r10
@@ -197,15 +197,14 @@ ipw r10 r4 r1 ; write it to original array
 
 i_add r4 1 r4
 i_add r9 1 r9
-i_cmp r9 r5 
+i_cmp r9 r5
 jne q_sort_merge_smaller_loop
 
 pivot_write:
 
+
 ipw r7 r4 r1 ; write the pivot to original array
 i_add r4 1 r4 ; move the index
-
-
 
 ; merge the 'greater' array
 ; jump over if array length is zero
@@ -220,13 +219,13 @@ i_cmp r4 r0
 jgre qsort_end
 
 q_sort_merge_larger_loop:
-
+	
 ipr r3 r9 r10; read from 'greater' array to r10
 ipw r10 r4 r1 ; write it to original array
 
 i_add r4 1 r4
 i_add r9 1 r9
-i_cmp r9 r6 
+i_cmp r9 r6
 jne q_sort_merge_larger_loop
 
 
@@ -246,10 +245,5 @@ pop r0
 
 
 ret 2
-
-
-
-
-
 
 

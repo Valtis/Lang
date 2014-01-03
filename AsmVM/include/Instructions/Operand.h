@@ -38,7 +38,7 @@ public:
 		{
 			return value.m_value;
 		}
-		
+
 		return *(Type *)(&vm->m_registers[value.m_register].values);
 	}
 	

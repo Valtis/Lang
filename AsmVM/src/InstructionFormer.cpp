@@ -19,7 +19,7 @@ int ParseRegister(string value)
 		throw runtime_error("Source is not a register");
 	}
 
-	return value[1] - '0';
+	return stoi(value.substr(1, value.length() - 1));
 }
 
 void CheckParameterCount(vector<string> tokens, int expected)
@@ -34,7 +34,7 @@ void SetIntegerOperand(Operand<int> &operand, const string &value)
 {
 	if (value[0] == REGISTER_START_TOKEN)
 	{
-		operand.SetRegister(value[1] - '0');
+		operand.SetRegister(ParseRegister(value));
 	}
 	else
 	{
@@ -167,6 +167,7 @@ unique_ptr<Instruction> WriteToIntegerPtr(vector<string> tokens)
 
 	Operand<int> value;
 	Operand<int> location;
+
 	SetIntegerOperand(value, tokens[1]);
 	SetIntegerOperand(location, tokens[2]);
 

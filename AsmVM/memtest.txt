@@ -1,6 +1,7 @@
 ; allocates memory to force garbage collector to respond
 loop:
-i_alloc 1024 r0
+i_alloc 102400 r0
+push r0
 jump loop
 
 end

@@ -57,6 +57,13 @@ void VM::Run(string fileName)
 		}
 		catch (const exception &ex)
 		{
+			string error = "";
+			for (auto str : tokens[m_instruction_ptr])
+			{
+				error += str + " ";
+			}
+
+			printf("Error on command %s\n", error.c_str());
 			printf("Error: %s\n", ex.what());
 			return;
 		}

@@ -43,6 +43,21 @@ namespace UnitTests
 			Assert::AreEqual(value, operand.GetValue(&vm));
 		}
 
+		TEST_METHOD(OperandReturnsCorrectIntValueFromRegister2)
+		{
+			const int reg = 14;
+			const int value = 12345;
+			VM vm;
+			VMObject o;
+			o.type = ObjectType::INTEGER;
+			o.values.integer_value = value;
+			vm.m_registers[reg] = o;
+
+			Operand<int> operand;
+			operand.SetRegister(reg);
+			Assert::AreEqual(value, operand.GetValue(&vm));
+		}
+
 		TEST_METHOD(OperandReturnsCorrectDoubleValue)
 		{
 			const double value = 123.45;

@@ -1,4 +1,4 @@
-i_mov 5 r0
+i_mov 12 r0
 push nil
 push r0
 callsub factorial

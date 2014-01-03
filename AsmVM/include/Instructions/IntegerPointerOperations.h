@@ -46,7 +46,7 @@ public:
 	{
 		if (!IsPointer(vm->m_registers[m_register]))
 		{
-			throw std::runtime_error("Pointer operation on non pointer type attempted");
+			throw std::runtime_error("Pointer operation on non pointer type attempted when writing ");
 		}
 
 		int *ptr = (int *)vm->m_registers[m_register].values.ptr->ptr;
@@ -69,7 +69,6 @@ public:
 		}
 
 		ptr[pos] = m_value.GetValue(vm);
-
 	}
 
 private:
@@ -102,7 +101,7 @@ public:
 	{
 		if (!IsPointer(vm->m_registers[m_sourceRegister]))
 		{
-			throw std::runtime_error("Pointer operation on non pointer type attempted");
+			throw std::runtime_error("Pointer operation on non pointer type attempted when reading");
 		}
 
 		int *ptr = (int *)vm->m_registers[m_sourceRegister].values.ptr->ptr;

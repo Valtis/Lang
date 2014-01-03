@@ -131,7 +131,7 @@ void MemoryManager::DebugHeapPrint()
 }
 
 
-bool IsPointer(VMObject &o)
+bool IsPointer(const VMObject &o)
 {
 	return o.type == ObjectType::CHAR_PTR || o.type == ObjectType::DOUBLE_PTR || o.type == ObjectType::INTEGER_PTR;
 }

@@ -1,5 +1,5 @@
-; 2^5
-i_mov 5 r0
+; 2^30
+i_mov 30 r0
 i_mov 2 r1
 i_mov 12345 r2 ; for checking that register is properly saved
 push nil ; return value

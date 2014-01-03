@@ -39,8 +39,8 @@
 
 
 #define ALLOCATE_INTEGER_POINTER "i_alloc"
-#define WRITE_TO_INTEGER_POINTER "ipr"
-#define READ_FROM_INTEGER_POINTER "ipw"
+#define WRITE_TO_INTEGER_POINTER "ipw"
+#define READ_FROM_INTEGER_POINTER "ipr"
 
 #define MEMORY_MANAGER_DEBUG_STATE "print_mem_mgr_debug"
 #define FORCE_GC "gc"

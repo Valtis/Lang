@@ -10,6 +10,7 @@ namespace UnitTests
 	TEST_CLASS(IntegerPointerOperationsTest)
 	{
 	public:
+		
 
 		TEST_METHOD(AllocateIntegerPointerAllocatesCorrectTypeWithValueOperand)
 		{

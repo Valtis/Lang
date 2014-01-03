@@ -4,7 +4,7 @@
 #include "VMObject.h"
 class VM;
 
-bool IsPointer(VMObject &o);
+bool IsPointer(const VMObject &o);
 
 
 class MemoryManager
