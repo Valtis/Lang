@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 // Integer addition
-
+/*
 int Instructions::I_ValueHelper(VM *vm, std::string param)
 {
 	int reg = GetRegisterNumber(param, false);
@@ -558,3 +558,4 @@ int Instructions::GetRegisterNumber(std::string param, bool throwOnInvalid)
 	return -1;
 }
 
+*/

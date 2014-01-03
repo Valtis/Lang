@@ -57,6 +57,9 @@
     <ClInclude Include="include\Instructions\ArithmeticOperations.h">
       <Filter>Header Files\Instructions</Filter>
     </ClInclude>
+    <ClInclude Include="include\Instructions\JumpCommands.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FileTokenizer.cpp">

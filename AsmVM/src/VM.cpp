@@ -10,7 +10,7 @@
 
 using namespace std;
 
-VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT), m_endExecution(false)
+VM::VM() : m_stack_ptr(0), m_instructionPointer(0), m_frame_ptr(0), m_cmpResult(NO_RESULT), m_endExecution(false)
 {
 	m_generator.seed(time(nullptr));
 
