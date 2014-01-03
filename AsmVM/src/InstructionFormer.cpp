@@ -8,6 +8,7 @@
 #include "Instructions/Print.h"
 #include "Instructions/StackOperations.h"
 #include "Instructions/UtilityInstructions.h"
+#include "Instructions/IntegerPointerOperations.h"
 // todo - replace runtime_errors with ParseExceptions and improve error messages
 using namespace std;
 
@@ -141,6 +142,8 @@ unique_ptr<Instruction> ConstructStackOperation(vector<string> tokens)
 	
 	return unique_ptr<Instruction>(new T(o1, ParseRegister(tokens[2])));
 }
+
+
 template <typename T>
 unique_ptr<Instruction> ConstructParameterlessInstruction()
 {
@@ -148,6 +151,37 @@ unique_ptr<Instruction> ConstructParameterlessInstruction()
 	return unique_ptr<Instruction>(new T);
 }
 
+unique_ptr<Instruction> ConstructIntegerAllocationInstruction(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 3);
+	
+	Operand<int> o1;
+	SetIntegerOperand(o1, tokens[1]);
+
+	return unique_ptr<Instruction>(new AllocateIntegerPointer(o1, ParseRegister(tokens[2])));
+}
+
+unique_ptr<Instruction> WriteToIntegerPtr(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 4);
+
+	Operand<int> value;
+	Operand<int> location;
+	SetIntegerOperand(value, tokens[1]);
+	SetIntegerOperand(location, tokens[2]);
+
+	return unique_ptr<Instruction>(new WriteToIntegerPointer(value, location, ParseRegister(tokens[3])));
+}
+
+unique_ptr<Instruction> ReadFromIntegerPtr(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 4);
+
+	Operand<int> location;
+	SetIntegerOperand(location, tokens[2]);
+
+	return unique_ptr<Instruction>(new ReadFromIntegerPointer(ParseRegister(tokens[1]), location, ParseRegister(tokens[3])));
+}
 
 vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector<vector<string>> &tokenizedLines)
 {
@@ -231,6 +265,18 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		else if (tokens[0] == STACK_WRITE)
 		{
 			instructions.push_back(ConstructStackOperation<WriteStack>(tokens));
+		}
+		else if (tokens[0] == ALLOCATE_INTEGER_POINTER)
+		{
+			instructions.push_back(ConstructIntegerAllocationInstruction(tokens));
+		}
+		else if (tokens[0] == WRITE_TO_INTEGER_POINTER)
+		{
+			instructions.push_back(WriteToIntegerPtr(tokens));
+		}
+		else if (tokens[0] == READ_FROM_INTEGER_POINTER)
+		{
+			instructions.push_back(ReadFromIntegerPtr(tokens));
 		}
 		else if (tokens[0] == END)
 		{

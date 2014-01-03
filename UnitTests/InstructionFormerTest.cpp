@@ -7,6 +7,7 @@
 #include "Instructions/StackOperations.h"
 #include "Instructions/Print.h"
 #include "Instructions/UtilityInstructions.h"
+#include "Instructions/IntegerPointerOperations.h"
 #include "Tokens.h"
 #include <vector>
 #include <string>
@@ -350,6 +351,48 @@ namespace UnitTests
 			vector<vector<string>> fileTokens = { { MEMORY_MANAGER_DEBUG_STATE } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <MemoryManagedPrintState *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerAllocationInstructionCorrectlyWithValueParameter)
+		{
+			vector<vector<string>> fileTokens = { { ALLOCATE_INTEGER_POINTER, "4000", "r3" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <AllocateIntegerPointer *>(instructions[0].get()));
+		}
+		
+		TEST_METHOD(InstructionFormerFormsIntegerAllocationInstructionCorrectlyWithRegisterParameter)
+		{
+			vector<vector<string>> fileTokens = { { ALLOCATE_INTEGER_POINTER, "r4", "r3" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <AllocateIntegerPointer *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerPointerWriteCorrectlyWithValueParameter)
+		{
+			vector<vector<string>> fileTokens = { { WRITE_TO_INTEGER_POINTER, "4000", "20", "r4" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <WriteToIntegerPointer *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerPointerWriteCorrectlyWithRegisterParameter)
+		{
+			vector<vector<string>> fileTokens = { { WRITE_TO_INTEGER_POINTER, "r4", "r3", "r2" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <WriteToIntegerPointer *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerPointerReadCorrectlyWithValueParameter)
+		{
+			vector<vector<string>> fileTokens = { { READ_FROM_INTEGER_POINTER, "r1", "20", "r4" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <ReadFromIntegerPointer *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsIntegerPointerReadCorrectlyWithRegisterParameter)
+		{
+			vector<vector<string>> fileTokens = { { READ_FROM_INTEGER_POINTER, "r4", "r3", "r2" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <ReadFromIntegerPointer *>(instructions[0].get()));
 		}
 	};
 }

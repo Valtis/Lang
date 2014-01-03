@@ -45,10 +45,7 @@ public:
 
 		if (storeRegister < 0 || storeRegister >= REGISTER_CNT)
 		{
-			if (storeRegister < 0 || storeRegister > REGISTER_CNT)
-			{
-				throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
-			}
+			throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
 		}
 
 		m_storeRegister = storeRegister;

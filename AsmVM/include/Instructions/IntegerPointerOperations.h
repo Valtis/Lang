@@ -8,7 +8,7 @@ class AllocateIntegerPointer : public Instruction
 public:
 	AllocateIntegerPointer(Operand<int> size, int reg)
 	{
-		if (reg < 0 || reg > REGISTER_CNT)
+		if (reg < 0 || reg >= REGISTER_CNT)
 		{
 			throw std::runtime_error("Invalid register specified: " + std::to_string(reg));
 		}
@@ -28,82 +28,112 @@ private:
 
 };
 
-/*
-
-
-
-
-void Instructions::I_ptr_write(VM * vm, const std::vector<std::string> &params)
+class WriteToIntegerPointer : public Instruction
 {
-	if (params.size() != 4)
+public:
+	WriteToIntegerPointer(Operand<int> value, Operand<int> location, int storeRegister)
 	{
-		throw std::runtime_error("Invalid parameter count for command IPW");
+		if (storeRegister < 0 || storeRegister >= REGISTER_CNT)
+		{
+			throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
+		}
+		m_value = value;
+		m_register = storeRegister;
+		m_location = location;		
 	}
 
-	int value = I_ValueHelper(vm, params[1]);
-	unsigned int pos = I_ValueHelper(vm, params[2]);
-	int reg = GetRegisterNumber(params[3]);
-
-	if (!IsPointer(vm->m_registers[reg]))
+	void Execute(VM *vm) override
 	{
-		throw std::runtime_error("Pointer operation on nonpointer type attempted");
+		if (!IsPointer(vm->m_registers[m_register]))
+		{
+			throw std::runtime_error("Pointer operation on non pointer type attempted");
+		}
+
+		int *ptr = (int *)vm->m_registers[m_register].values.ptr->ptr;
+		int ptrSize = vm->m_registers[m_register].values.ptr->size;
+		
+		int pos = m_location.GetValue(vm);
+		
+		if (pos < 0)
+		{
+			throw std::runtime_error("Pointer write underflow " + std::to_string(pos));
+		}
+		else if (pos >= ptrSize / sizeof(int))
+		{
+			throw std::runtime_error("Pointer write overflow: write to index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
+		}
+
+		if (ptr == nullptr)
+		{
+			throw std::runtime_error("Null pointer dereferenced");
+		}
+
+		ptr[pos] = m_value.GetValue(vm);
+
 	}
 
-	int *ptr = (int *)vm->m_registers[reg].values.ptr.ptr;
-	int ptrSize = vm->m_registers[reg].values.ptr.size;
-	if (pos < 0)
-	{
-		throw std::runtime_error("Pointer write underflow " + std::to_string(pos));
-	}
-	else if (pos >= ptrSize / sizeof(int))
-	{
-		throw std::runtime_error("Pointer write overflow: write to index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
-	}
+private:
+	Operand<int> m_value;
+	Operand<int> m_location;
+	int m_register;
+};
 
-	if (ptr == nullptr)
-	{
-		throw std::runtime_error("Nullpointer dereferenced");
-	}
-
-	ptr[pos] = value;
-
-}
-
-void Instructions::I_ptr_read(VM * vm, const std::vector<std::string> &params)
+class ReadFromIntegerPointer : public Instruction
 {
-	if (params.size() != 4)
+public:
+	ReadFromIntegerPointer(int sourceRegister, Operand<int> location, int storeRegister)
 	{
-		throw std::runtime_error("Invalid parameter count for command IPR");
+
+		if (sourceRegister < 0 || sourceRegister >= REGISTER_CNT)
+		{
+			throw std::runtime_error("Invalid register specified: " + std::to_string(sourceRegister));
+		}
+
+		if (storeRegister < 0 || storeRegister >= REGISTER_CNT)
+		{
+			throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
+		}
+		m_sourceRegister = sourceRegister;
+		m_destinationRegister = storeRegister;
+		m_location = location;
 	}
 
-	int srcReg = GetRegisterNumber(params[1]);
-	int pos = I_ValueHelper(vm, params[2]);
-	int destReg = GetRegisterNumber(params[3]);
-
-
-	if (!IsPointer(vm->m_registers[srcReg]))
+	void Execute(VM *vm) override
 	{
-		throw std::runtime_error("Pointer operation on nonpointer type attempted");
+		if (!IsPointer(vm->m_registers[m_sourceRegister]))
+		{
+			throw std::runtime_error("Pointer operation on non pointer type attempted");
+		}
+
+		int *ptr = (int *)vm->m_registers[m_sourceRegister].values.ptr->ptr;
+		int ptrSize = vm->m_registers[m_sourceRegister].values.ptr->size;
+
+		int pos = m_location.GetValue(vm);
+
+		if (pos < 0)
+		{
+			throw std::runtime_error("Pointer write underflow " + std::to_string(pos));
+		}
+		else if (pos >= ptrSize / sizeof(int))
+		{
+			throw std::runtime_error("Pointer write overflow: write to index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
+		}
+
+		if (ptr == nullptr)
+		{
+			throw std::runtime_error("Null pointer dereferenced");
+		}
+		vm->m_registers[m_destinationRegister].type = ObjectType::INTEGER;
+		vm->m_registers[m_destinationRegister].values.integer_value = ptr[pos];
 	}
 
-	int *ptr = (int *)vm->m_registers[srcReg].values.ptr.ptr;
-	int ptrSize = vm->m_registers[srcReg].values.ptr.size;
+private:
+	int m_sourceRegister;
+	Operand<int> m_location;
+	int m_destinationRegister;
+};
 
-	if (ptr == nullptr)
-	{
-		throw std::runtime_error("Nullpointer dereferenced");
-	}
 
-	if (pos < 0)
-	{
-		throw std::runtime_error("Pointer read underflow: index " + std::to_string(pos));
-	}
-	else if (pos >= ptrSize / sizeof(int))
-	{
-		throw std::runtime_error("Pointer read overflow: read from index " + std::to_string(pos) + " max: " + std::to_string(ptrSize / sizeof(int)-1));
-	}
 
-	vm->m_registers[destReg].type = ObjectType::INTEGER;
-	vm->m_registers[destReg].values.integer_value = ptr[pos];
-}
-*/
+
+

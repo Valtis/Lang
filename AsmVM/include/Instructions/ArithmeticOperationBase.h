@@ -9,7 +9,7 @@ class ArithmeticOperationBase : public Instruction
 public:
 	ArithmeticOperationBase(Operand<Type> operand1, Operand<Type> operand2, int storeRegister)
 	{
-		if (storeRegister < 0 || storeRegister > REGISTER_CNT)
+		if (storeRegister < 0 || storeRegister >= REGISTER_CNT)
 		{
 			throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
 		}
