@@ -17,7 +17,7 @@ public:
 	{
 		VMObject o;
 		SetType<Type>(o);
-		o.values.integer_value = m_operand1.GetValue(vm) + m_operand2.GetValue(vm);
+		*(Type *)(&o.values) = m_operand1.GetValue(vm) + m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
 };
@@ -36,7 +36,7 @@ public:
 	{
 		VMObject o;
 		SetType<Type>(o);
-		o.values.integer_value = m_operand1.GetValue(vm) - m_operand2.GetValue(vm);
+		*(Type *)(&o.values) = m_operand1.GetValue(vm) - m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
 };
@@ -55,7 +55,7 @@ public:
 	{
 		VMObject o;
 		SetType<Type>(o);
-		o.values.integer_value = m_operand1.GetValue(vm) * m_operand2.GetValue(vm);
+		*(Type *)(&o.values) = m_operand1.GetValue(vm) * m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
 };
@@ -75,7 +75,7 @@ public:
 	{
 		VMObject o;
 		SetType<Type>(o);
-		o.values.integer_value = m_operand1.GetValue(vm) / m_operand2.GetValue(vm);
+		*(Type *)(&o.values) = m_operand1.GetValue(vm) / m_operand2.GetValue(vm);
 		vm->m_registers[m_storeRegister] = o;
 	}
 };

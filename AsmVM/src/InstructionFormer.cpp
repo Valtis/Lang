@@ -104,6 +104,9 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		{
 			instructions.push_back(ConstructIntegerDivision(token));
 		}
+		else {
+			throw runtime_error(std::string("unrecognized command: ") + token[0]);
+		}
 	
 	}
 	return instructions;

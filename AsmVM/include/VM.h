@@ -5,7 +5,6 @@
 #include <array>
 #include <stack>
 #include <unordered_map>
-#include <functional>
 #include <random>
 #include "MemoryManager.h"
 
@@ -28,11 +27,8 @@ public:
 
 	typedef std::vector<std::string> &InstrParam;
 	void ExtractJumpPositions(std::vector<std::vector<std::string>> &tokens);
-
-
 	
 	std::unordered_map<std::string, int> m_jumpositions;
-	std::unordered_map < std::string, std::function <void(VM *, InstrParam)>> m_instructionHandlers;
 	
 	std::array<VMObject, REGISTER_CNT> m_registers;
 	std::array<VMObject, 1024> m_stack;
@@ -45,5 +41,7 @@ public:
 	MemoryManager m_memoryManager;
 
 	std::mt19937 m_generator;
+
+	bool m_endExecution;
 };
 

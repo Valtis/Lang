@@ -1,47 +1,18 @@
 #include "VM.h"
 #include "FileTokenizer.h"
-#include "Instructions.h"
+#include "Instructions/Instruction.h"
+#include "InstructionFormer.h"
 #include "Tokens.h"
 #include <cstdio>
 #include <fstream>
 #include <ctime>
-
+#include <memory>
 
 using namespace std;
 
-VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT)
+VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT), m_endExecution(false)
 {
 	m_generator.seed(time(nullptr));
-
-	/*m_instructionHandlers["i_add"] = Instructions::I_Add;
-	m_instructionHandlers["i_sub"] = Instructions::I_Sub;
-	m_instructionHandlers["i_mul"] = Instructions::I_Mul;
-	m_instructionHandlers["i_mov"] = Instructions::I_Mov;
-	m_instructionHandlers["i_cmp"] = Instructions::I_Cmp;
-	m_instructionHandlers["i_rand"] = Instructions::I_Rand;
-
-	m_instructionHandlers["print"] = Instructions::Print;
-	
-	m_instructionHandlers["push"] = Instructions::Push;
-	m_instructionHandlers["pop"] = Instructions::Pop;
-	m_instructionHandlers["stackr"] = Instructions::StackRead;
-	m_instructionHandlers["stackw"] = Instructions::StackWrite;
-
-
-	m_instructionHandlers["callsub"] = Instructions::CallSub;
-	m_instructionHandlers["ret"] = Instructions::Ret;
-	m_instructionHandlers["jump"] = Instructions::Jump;
-	m_instructionHandlers["jne"] = Instructions::JumpNotEqual;
-	m_instructionHandlers["jeq"] = Instructions::JumpIfEqual;
-	m_instructionHandlers["jle"] = Instructions::JumpIfLess;
-	m_instructionHandlers["jgr"] = Instructions::JumpIfGreater;
-
-	m_instructionHandlers["gc"] = Instructions::GC;
-	m_instructionHandlers["print_mem_mgr_debug"] = Instructions::MemManagerDebugPrint;
-
-	m_instructionHandlers["i_alloc"] = Instructions::I_Alloc;
-	m_instructionHandlers["ipr"] = Instructions::I_ptr_read;
-	m_instructionHandlers["ipw"] = Instructions::I_ptr_write;*/
 
 }
 
@@ -51,47 +22,31 @@ VM::~VM()
 }
 
 
-void VM::Run(std::string fileName)
+void VM::Run(string fileName)
 {
 	ifstream file(fileName);
-	std::vector<std::vector<std::string>> tokens = FileTokenizer::Tokenize(file);
+	vector<vector<string>> tokens = FileTokenizer::Tokenize(file);
 
 
 	ExtractJumpPositions(tokens);
+	vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(tokens);
+	
 	
 
-	while (m_instructionPointer < tokens.size())
+	while (m_instructionPointer < instructions.size() && m_endExecution == false)
 	{
-		if (tokens[m_instructionPointer][0] == END_TOKEN)
-		{
-			return;
-		}
-
-		if (m_instructionHandlers.count(tokens[m_instructionPointer][0]) == 0)
-		{
-			printf("Unrecognized command: %s", tokens[m_instructionPointer][0].c_str());
-			return;
-		}
-
 		try
 		{
-			m_instructionHandlers[tokens[m_instructionPointer][0]](this, tokens[m_instructionPointer]);
+			instructions[m_instructionPointer]->Execute(this);
 			if (m_memoryManager.MustCollect())
 			{
 				m_memoryManager.RunGC(this);
 			}
 
 		}
-		catch (const std::exception &ex)
+		catch (const exception &ex)
 		{
-			printf("Error at line");
-
-			for (string & t : tokens[m_instructionPointer])
-			{
-				printf(" %s", t.c_str());
-			}
-
-			printf(": %s\n", ex.what());
+			printf("Error: %s\n", ex.what());
 			return;
 		}
 
@@ -99,7 +54,7 @@ void VM::Run(std::string fileName)
 	}
 }
 
-void VM::ExtractJumpPositions(std::vector<std::vector<std::string>> &tokens)
+void VM::ExtractJumpPositions(vector<vector<string>> &tokens)
 {
 	int pos = 0;
 	auto it = tokens.begin();
