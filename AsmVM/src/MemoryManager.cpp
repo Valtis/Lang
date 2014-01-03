@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "VM.h"
 
+
 #define GC_MIN_THRESHOLD 20
 MemoryManager::MemoryManager() : m_gcThreshold(20), m_allocatedMemorySizeInBytes(0)
 {
@@ -52,24 +53,24 @@ VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 	}
 
 	managedPtr->m_marked = false;
-	managedPtr->m_memory_manager_ptr = managedPtr;
 	managedPtr->size = cnt*size;
 	m_allocatedMemorySizeInBytes += managedPtr->size;
-
-
-	managedPtr->ptr = malloc(managedPtr->size);
+	
+	managedPtr->ptr = malloc(size*cnt);
+	
 	if (managedPtr->ptr == nullptr)
 	{
 		RunGC(vm);
-		managedPtr->ptr = malloc(managedPtr->size);
-		if (managedPtr->ptr == nullptr)
+		managedPtr->ptr = malloc(size*cnt);
+		if (managedPtr == nullptr)
 		{
 			throw std::runtime_error("Memory allocation failed - out of memory?");
 		}
 	}
 
+
 	o.type = t;
-	o.values.ptr = *managedPtr;
+	o.values.ptr = managedPtr;
 	m_allocatedPointers.push_back(managedPtr);
 
 	return o;
@@ -85,7 +86,7 @@ void MemoryManager::RunGC(VM *vm)
 
 		if (IsPointer(r))
 		{
-			r.values.ptr.m_memory_manager_ptr->m_marked = true;
+			r.values.ptr->m_marked = true;
 		}
 		++reg;
 	}
@@ -94,7 +95,7 @@ void MemoryManager::RunGC(VM *vm)
 	{
 		if (IsPointer(vm->m_stack[i]))
 		{
-			vm->m_stack[i].values.ptr.m_memory_manager_ptr->m_marked = true;
+			vm->m_stack[i].values.ptr->m_marked = true;
 		}
 	}
 

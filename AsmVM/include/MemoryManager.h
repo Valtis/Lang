@@ -20,6 +20,8 @@ public:
 
 	void DebugHeapPrint();
 
+	long int AllocatedMemory() { return m_allocatedMemorySizeInBytes; };
+
 private:
 
 

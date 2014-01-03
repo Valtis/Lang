@@ -91,7 +91,9 @@
     <ClCompile Include="InstructionFormerTest.cpp" />
     <ClCompile Include="IntegerArithmeticInstructionTest.cpp" />
     <ClCompile Include="FileTokenizerTest.cpp" />
+    <ClCompile Include="IntegerPointerOperationsTest.cpp" />
     <ClCompile Include="JumpTests.cpp" />
+    <ClCompile Include="MemoryMangerTest.cpp" />
     <ClCompile Include="OperandTest.cpp" />
     <ClCompile Include="RegisterManipulationOperationTest.cpp" />
     <ClCompile Include="StackOperationsTest.cpp" />

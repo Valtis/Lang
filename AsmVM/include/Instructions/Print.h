@@ -58,7 +58,7 @@ public:
 		case ObjectType::INTEGER_PTR:
 		case ObjectType::DOUBLE_PTR:
 		case ObjectType::CHAR_PTR:
-			printf("%d\n", o.values.ptr.ptr); // print memory address
+			printf("%d\n", o.values.ptr); // print memory address
 			break;
 		default:
 			printf("**UNINITIALIZED**\n");
