@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "Instructions/StackOperations.h"
+
 #include "VM.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -86,6 +87,106 @@ namespace UnitTests
 			pop.Execute(&vm);
 
 			Assert::AreEqual(value, vm.m_registers[reg].values.integer_value);
+		}
+
+		TEST_METHOD(StackReadReadsCorrectlyFromStackWithValueOperand)
+		{
+			const int offset = -2;
+			const int reg = 4;
+			const int value = 2323;
+			
+			VM vm;
+			vm.m_frame_ptr = -offset;
+
+			VMObject o;
+			o.type = ObjectType::INTEGER;
+			o.values.integer_value = value;
+			vm.Push(o);
+
+			Operand<int> op;
+			op.SetValue(offset);
+			
+			ReadStack read(op, reg);
+			read.Execute(&vm);
+
+			Assert::AreEqual(value, vm.m_registers[reg].values.integer_value);
+		}
+
+		TEST_METHOD(StackReadReadsCorrectlyFromStackWithRegisterOperand)
+		{
+			const int offset = -2;
+			const int reg = 4;
+			const int readRegister = 10;
+			const int value = 2323;
+
+			VM vm;
+			vm.m_frame_ptr = -offset;
+			vm.m_registers[readRegister].values.integer_value = offset;
+			vm.m_registers[readRegister].type = ObjectType::INTEGER;
+
+			VMObject o;
+			o.type = ObjectType::INTEGER;
+			o.values.integer_value = value;
+			vm.Push(o);
+
+			Operand<int> op;
+			op.SetRegister(readRegister);
+
+			ReadStack read(op, reg);
+			read.Execute(&vm);
+
+			Assert::AreEqual(value, vm.m_registers[reg].values.integer_value);
+		}
+
+		TEST_METHOD(StackWriteWritesCorrectlyToStackWithValueOperand)
+		{
+			const int offset = -2;
+			const int reg = 4;
+			const int value = 2323;
+			
+			VM vm;
+			vm.m_frame_ptr = -offset;
+
+			vm.m_registers[reg].values.integer_value = value;
+			vm.m_registers[reg].type = ObjectType::INTEGER;
+
+			Operand<int> op;
+			op.SetValue(offset);
+			
+			Push push(-1);
+			push.Execute(&vm);
+
+			WriteStack write(op, reg);
+			write.Execute(&vm);
+
+			Assert::AreEqual(value, vm.m_stack[0].values.integer_value);
+		}
+
+		TEST_METHOD(StackWriteWritesCorrectlyToStackWithRegisterOperand)
+		{
+			const int offset = -2;
+			const int reg = 4;
+			const int readRegister = 10;
+			const int value = 2323;
+
+			VM vm;
+			vm.m_frame_ptr = -offset;
+			vm.m_registers[readRegister].values.integer_value = offset;
+			vm.m_registers[readRegister].type = ObjectType::INTEGER;
+
+			vm.m_registers[reg].values.integer_value = value;
+			vm.m_registers[reg].type = ObjectType::INTEGER;
+
+			Operand<int> op;
+			op.SetRegister(readRegister);
+
+			Push push(-1);
+			push.Execute(&vm);
+
+			WriteStack write(op, reg);
+			write.Execute(&vm);
+
+			Assert::AreEqual(value, vm.m_stack[0].values.integer_value);
 		}
 
 

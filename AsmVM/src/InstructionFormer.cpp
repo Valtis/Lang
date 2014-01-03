@@ -141,11 +141,11 @@ unique_ptr<Instruction> ConstructStackOperation(vector<string> tokens)
 	
 	return unique_ptr<Instruction>(new T(o1, ParseRegister(tokens[2])));
 }
-
-unique_ptr<Instruction> ConstructEndInstruction()
+template <typename T>
+unique_ptr<Instruction> ConstructParameterlessInstruction()
 {
 	
-	return unique_ptr<Instruction>(new End);
+	return unique_ptr<Instruction>(new T);
 }
 
 
@@ -234,7 +234,15 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		}
 		else if (tokens[0] == END)
 		{
-			instructions.push_back(ConstructEndInstruction());
+			instructions.push_back(ConstructParameterlessInstruction<End>());
+		}
+		else if (tokens[0] == FORCE_GC)
+		{
+			instructions.push_back(ConstructParameterlessInstruction<GC>());
+		}
+		else if (tokens[0] == MEMORY_MANAGER_DEBUG_STATE)
+		{
+			instructions.push_back(ConstructParameterlessInstruction<MemoryManagedPrintState>());
 		}
 		else 
 		{

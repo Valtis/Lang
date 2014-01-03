@@ -36,3 +36,6 @@
 #define STACK_WRITE "stackw"
 
 #define PRINT "print"
+
+#define MEMORY_MANAGER_DEBUG_STATE "print_mem_mgr_debug"
+#define FORCE_GC "gc"

@@ -20,6 +20,14 @@ namespace UnitTests
 			Assert::AreEqual(value, operand.GetValue(nullptr));
 		}
 
+		TEST_METHOD(OperandReturnsCorrectNegativeIntValue)
+		{
+			const int value = -25;
+			Operand<int> operand;
+			operand.SetValue(value);
+			Assert::AreEqual(value, operand.GetValue(nullptr));
+		}
+
 		TEST_METHOD(OperandReturnsCorrectIntValueFromRegister)
 		{
 			const int reg = 4;

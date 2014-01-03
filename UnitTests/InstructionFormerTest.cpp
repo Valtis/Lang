@@ -6,6 +6,7 @@
 #include "Instructions/RegisterManipulationOperations.h"
 #include "Instructions/StackOperations.h"
 #include "Instructions/Print.h"
+#include "Instructions/UtilityInstructions.h"
 #include "Tokens.h"
 #include <vector>
 #include <string>
@@ -300,6 +301,55 @@ namespace UnitTests
 			vector<vector<string>> fileTokens = { { POP, "r9" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Pop *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsStackReadCorrectlyWithValueParameter)
+		{
+			vector<vector<string>> fileTokens = { { STACK_READ, "-3", "r1" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <ReadStack *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsStackReadCorrectlyWithRegisterParameter)
+		{
+			vector<vector<string>> fileTokens = { { STACK_READ, "r14", "r1" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <ReadStack *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsStackWriteCorrectlyWithValueParameter)
+		{
+			vector<vector<string>> fileTokens = { { STACK_WRITE, "-3", "r1" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <WriteStack *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsStackWriteCorrectlyWithRegisterParameter)
+		{
+			vector<vector<string>> fileTokens = { { STACK_WRITE, "r14", "r1" } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <WriteStack *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsEndInstructionCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { END } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <End *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsGCInstructionCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { FORCE_GC } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <GC *>(instructions[0].get()));
+		}
+
+		TEST_METHOD(InstructionFormerFormsMemoryDebugInstructionCorrectly)
+		{
+			vector<vector<string>> fileTokens = { { MEMORY_MANAGER_DEBUG_STATE } };
+			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
+			Assert::IsNotNull(dynamic_cast <MemoryManagedPrintState *>(instructions[0].get()));
 		}
 	};
 }

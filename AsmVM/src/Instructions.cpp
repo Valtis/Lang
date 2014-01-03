@@ -6,16 +6,6 @@
 /*
 }
 
-void Instructions::GC(VM * vm, const std::vector<std::string> &params)
-{
-	vm->m_memoryManager.RunGC(vm);
-}
-
-void Instructions::MemManagerDebugPrint(VM * vm, const std::vector<std::string> &params)
-{
-	vm->m_memoryManager.DebugHeapPrint();
-}
-
 
 void Instructions::I_Alloc(VM * vm, const std::vector<std::string> &params)
 {
