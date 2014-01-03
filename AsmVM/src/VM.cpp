@@ -7,7 +7,7 @@
 #include <fstream>
 #include <ctime>
 #include <memory>
-
+#include <chrono>
 using namespace std;
 
 VM::VM() : m_stack_ptr(0), m_instruction_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT), m_endExecution(false)
@@ -27,7 +27,7 @@ void VM::Run(string fileName)
 	ifstream file(fileName);
 	vector<vector<string>> tokens = FileTokenizer::Tokenize(file);
 
-
+	
 	ExtractJumpPositions(tokens);
 	vector<std::unique_ptr<Instruction>> instructions;
 	try 
@@ -40,7 +40,9 @@ void VM::Run(string fileName)
 		return;
 	}
 	
+	int instructionsPerformed = 0;
 
+	auto start = chrono::system_clock::now();
 	while (m_instruction_ptr < instructions.size() && m_endExecution == false)
 	{
 		try
@@ -50,6 +52,7 @@ void VM::Run(string fileName)
 			{
 				m_memoryManager.RunGC(this);
 			}
+			++instructionsPerformed;
 
 		}
 		catch (const exception &ex)
@@ -60,6 +63,13 @@ void VM::Run(string fileName)
 
 		++m_instruction_ptr;
 	}
+
+	auto end = chrono::system_clock::now();
+
+	auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds> (end - start);
+	
+	printf("Performed %d instructions in %d millisecond", instructionsPerformed, milliseconds.count());
+
 }
 
 void VM::ExtractJumpPositions(vector<vector<string>> &tokens)

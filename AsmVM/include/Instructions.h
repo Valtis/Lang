@@ -8,8 +8,7 @@ class Instructions
 {
 public:
 	
-	static void Print(VM * vm, const std::vector<std::string> &params);
-
+	
 	static void I_Alloc(VM * vm, const std::vector<std::string> &params);
 	
 	static void I_ptr_write(VM * vm, const std::vector<std::string> &params);
@@ -20,13 +19,6 @@ public:
 
 	static void MemManagerDebugPrint(VM * vm, const std::vector<std::string> &params);
 
-	static void Push(VM * vm, const std::vector<std::string> &params);
-	
-	static void Pop(VM * vm, const std::vector<std::string> &params);
-
-	static void StackRead(VM * vm, const std::vector<std::string> &params);
-	
-	static void StackWrite(VM * vm, const std::vector<std::string> &params);
 
 private:
 	static int GetRegisterNumber(std::string, bool throwOnInvalid = true);

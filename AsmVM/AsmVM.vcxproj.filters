@@ -72,6 +72,9 @@
     <ClInclude Include="include\Instructions\Print.h">
       <Filter>Header Files\Instructions</Filter>
     </ClInclude>
+    <ClInclude Include="include\Instructions\StackOperations.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\FileTokenizer.cpp">

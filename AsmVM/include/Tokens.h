@@ -27,4 +27,10 @@
 #define CALLSUB "callsub"
 #define RET "ret"
 
+#define PUSH "push"
+#define POP "pop"
+
+#define STACK_READ "stackr"
+#define STACK_WRITE "stackw"
+
 #define PRINT "print"

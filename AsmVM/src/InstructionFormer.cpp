@@ -6,6 +6,7 @@
 #include "Instructions/JumpCommands.h"
 #include "Instructions/RegisterManipulationOperations.h"
 #include "Instructions/Print.h"
+#include "Instructions/StackOperations.h"
 // todo - replace runtime_errors with ParseExceptions and improve error messages
 using namespace std;
 
@@ -108,8 +109,22 @@ unique_ptr<Instruction> ConstructPrintInstruction(vector<string> tokens)
 		return unique_ptr<Instruction>(new Print(tokens));
 	}
 
-	return unique_ptr<Instruction>(new Print(stoi(tokens[1])));
+	return unique_ptr<Instruction>(new Print(ParseRegister(tokens[1])));
 }
+
+unique_ptr<Instruction> ConstructPushInstruction(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 2);
+
+	if (tokens[1] == NIL_TOKEN)
+	{
+		return unique_ptr<Instruction>(new Push(-1));
+	}
+
+	return unique_ptr<Instruction>(new Push(ParseRegister(tokens[1])));
+}
+
+
 
 
 vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector<vector<string>> &tokenizedLines)
@@ -178,6 +193,10 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		else if (tokens[0] == PRINT)
 		{
 			instructions.push_back(ConstructPrintInstruction(tokens));
+		}
+		else if (tokens[0] == PUSH)
+		{
+			instructions.push_back(ConstructPushInstruction(tokens));
 		}
 		else 
 		{
