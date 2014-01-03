@@ -6,8 +6,10 @@
 #define REGISTER_START_TOKEN 'r'
 #define PRINT_TEXT_TOKEN '@'
 #define NIL_TOKEN "nil"
-#define END_TOKEN "end"
 
+
+
+#define END "end"
 
 #define INTEGER_ADDITION "i_add"
 #define INTEGER_SUBSTRACTION "i_sub"
@@ -22,7 +24,7 @@
 #define JUMP_IF_EQUAL "jeq"
 #define JUMP_IF_GREATER "jgre"
 #define JUMP_IF_LESSER "jle"
-#define JUMP_NOT_EQUAL "jneq"
+#define JUMP_NOT_EQUAL "jne"
 
 #define CALLSUB "callsub"
 #define RET "ret"

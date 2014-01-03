@@ -24,6 +24,7 @@
     <ClInclude Include="include\Instructions\RegisterManipulationOperations.h" />
     <ClInclude Include="include\Instructions\StackOperations.h" />
     <ClInclude Include="include\Instructions\TypeSetters.h" />
+    <ClInclude Include="include\Instructions\UtilityInstructions.h" />
     <ClInclude Include="include\MemoryManager.h" />
     <ClInclude Include="include\StringUtility.h" />
     <ClInclude Include="include\Tokens.h" />

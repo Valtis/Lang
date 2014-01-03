@@ -1,5 +1,6 @@
 #pragma once
 #include "Instructions/Instruction.h"
+#include "Instructions/Operand.h"
 #include "VM.h"
 
 class Push : public Instruction
@@ -56,67 +57,74 @@ private:
 	int m_register;
 };
 
-/*
-void Instructions::Pop(VM * vm, const std::vector<std::string> &params)
+class ReadStack : public Instruction
 {
-	if (params.size() != 2)
+public:
+	ReadStack(Operand<int> offset, int storeRegister)
 	{
-		throw std::runtime_error("Invalid parameter count for command POP");
+		// -1 has a special meaning of pushing nil value into stack
+		if (storeRegister < 0 || storeRegister >= REGISTER_CNT)
+		{
+			throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
+		}
+		m_register = storeRegister;
+		m_offset = offset;
 	}
 
-	VMObject o;
-	PopHelper(vm, o);
-	if (params[1] != NIL_TOKEN)
+	void Execute(VM *vm) override
 	{
-		int reg = GetRegisterNumber(params[1]);
-		vm->m_registers[reg] = o;
-	}
-}
+		long int pos = vm->m_frame_ptr + m_offset.GetValue(vm);
+		if (pos >= STACK_SIZE || pos >= vm->m_stack_ptr)
+		{
+			throw std::runtime_error("Stack Read reading over stack pointer");
+		}
 
-void Instructions::StackRead(VM * vm, const std::vector<std::string> &params)
+		if (pos < 0)
+		{
+			throw std::runtime_error("Stack read reading under stack");
+		}
+
+		vm->m_registers[m_register] = vm->m_stack[pos];	
+	}
+
+private:
+	Operand<int> m_offset;
+	int m_register;
+};
+
+class WriteStack : public Instruction
 {
-	if (params.size() != 3)
+public:
+	WriteStack(Operand<int> offset, int storeRegister)
 	{
-		throw std::runtime_error("Invalid parameter count for command STACKR");
+		// -1 has a special meaning of pushing nil value into stack
+		if (storeRegister < 0 || storeRegister >= REGISTER_CNT)
+		{
+			throw std::runtime_error("Invalid register specified: " + std::to_string(storeRegister));
+		}
+		m_register = storeRegister;
+		m_offset = offset;
 	}
 
-	int offset = std::stoi(params[1]);
-	int reg = GetRegisterNumber(params[2]);
-
-	unsigned int pos = vm->m_frame_ptr + offset;
-	if (pos >= vm->m_stack.size())
+	void Execute(VM *vm) override
 	{
-		throw std::runtime_error("STACKR stack overflow");
+		long int pos = vm->m_frame_ptr + m_offset.GetValue(vm);
+		if (pos >= STACK_SIZE || pos >= vm->m_stack_ptr)
+		{
+			throw std::runtime_error("Stack write writing over stack pointer");
+		}
+
+		if (pos < 0)
+		{
+			throw std::runtime_error("Stack write writing under stack");
+		}
+		
+		vm->m_stack[pos] = vm->m_registers[m_register];
 	}
 
-	if (pos < 0)
-	{
-		throw std::runtime_error("STACKR stack underflow");
-	}
+private:
+	Operand<int> m_offset;
+	int m_register;
+};
 
-	vm->m_registers[reg] = vm->m_stack[pos];
-}
 
-void Instructions::StackWrite(VM * vm, const std::vector<std::string> &params)
-{
-	if (params.size() != 3)
-	{
-		throw std::runtime_error("Invalid parameter count for command STACKW");
-	}
-
-	int offset = std::stoi(params[1]);
-	int reg = GetRegisterNumber(params[2]);
-
-	unsigned int pos = vm->m_frame_ptr + offset;
-	if (pos >= vm->m_stack.size())
-	{
-		throw std::runtime_error("STACKR stack overflow");
-	}
-
-	if (pos < 0)
-	{
-		throw std::runtime_error("STACKR stack underflow");
-	}
-
-	vm->m_stack[pos] = vm->m_registers[reg];
-*/

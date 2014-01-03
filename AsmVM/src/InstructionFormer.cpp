@@ -7,6 +7,7 @@
 #include "Instructions/RegisterManipulationOperations.h"
 #include "Instructions/Print.h"
 #include "Instructions/StackOperations.h"
+#include "Instructions/UtilityInstructions.h"
 // todo - replace runtime_errors with ParseExceptions and improve error messages
 using namespace std;
 
@@ -77,7 +78,6 @@ unique_ptr<Instruction> ConstructIntegerMoveInstruction(vector<string> tokens)
 	CheckParameterCount(tokens, 3);
 
 	Operand<int> o1;
-
 	SetIntegerOperand(o1, tokens[1]);
 	
 	return unique_ptr<Instruction>(new Move<int>(o1, ParseRegister(tokens[2])));
@@ -131,6 +131,22 @@ unique_ptr<Instruction> ConstructPopInstruction(vector<string> tokens)
 	return unique_ptr<Instruction>(new Pop(ParseRegister(tokens[1])));
 }
 
+template <typename T>
+unique_ptr<Instruction> ConstructStackOperation(vector<string> tokens)
+{
+	CheckParameterCount(tokens, 3);
+	
+	Operand<int> o1;
+	SetIntegerOperand(o1, tokens[1]);
+	
+	return unique_ptr<Instruction>(new T(o1, ParseRegister(tokens[2])));
+}
+
+unique_ptr<Instruction> ConstructEndInstruction()
+{
+	
+	return unique_ptr<Instruction>(new End);
+}
 
 
 vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector<vector<string>> &tokenizedLines)
@@ -207,6 +223,18 @@ vector<unique_ptr<Instruction>> InstructionFormer::FormInstructions(const vector
 		else if (tokens[0] == POP)
 		{
 			instructions.push_back(ConstructPopInstruction(tokens));
+		}
+		else if (tokens[0] == STACK_READ)
+		{
+			instructions.push_back(ConstructStackOperation<ReadStack>(tokens));
+		}
+		else if (tokens[0] == STACK_WRITE)
+		{
+			instructions.push_back(ConstructStackOperation<WriteStack>(tokens));
+		}
+		else if (tokens[0] == END)
+		{
+			instructions.push_back(ConstructEndInstruction());
 		}
 		else 
 		{
