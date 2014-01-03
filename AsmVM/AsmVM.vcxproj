@@ -11,12 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\InstructionFormer.h" />
     <ClInclude Include="include\Instructions.h" />
     <ClInclude Include="include\FileTokenizer.h" />
     <ClInclude Include="include\Instructions\Instruction.h" />
-    <ClInclude Include="include\Instructions\IntegerArithmeticOperation.h" />
+    <ClInclude Include="include\Instructions\ArithmeticOperationBase.h" />
     <ClInclude Include="include\Instructions\Operand.h" />
-    <ClInclude Include="include\Instructions\IntegerAddition.h" />
+    <ClInclude Include="include\Instructions\ArithmeticOperations.h" />
     <ClInclude Include="include\MemoryManager.h" />
     <ClInclude Include="include\StringUtility.h" />
     <ClInclude Include="include\Tokens.h" />
@@ -24,9 +25,9 @@
     <ClInclude Include="include\VMObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\InstructionFormer.cpp" />
     <ClCompile Include="src\Instructions.cpp" />
     <ClCompile Include="src\FileTokenizer.cpp" />
-    <ClCompile Include="src\Instructions\IntegerAddition.cpp" />
     <ClCompile Include="src\MemoryManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\StringUtility.cpp" />

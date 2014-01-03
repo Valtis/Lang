@@ -17,7 +17,7 @@ class Instructions;
 enum CmpResult {NO_RESULT, LESSER, EQUAL, GREATER };
 
 
-struct VM
+class VM
 {
 public:
 	VM();

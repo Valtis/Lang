@@ -45,13 +45,16 @@
     <ClInclude Include="include\Instructions\Instruction.h">
       <Filter>Header Files\Instructions</Filter>
     </ClInclude>
-    <ClInclude Include="include\Instructions\IntegerAddition.h">
-      <Filter>Header Files\Instructions</Filter>
-    </ClInclude>
     <ClInclude Include="include\Instructions\Operand.h">
       <Filter>Header Files\Instructions</Filter>
     </ClInclude>
-    <ClInclude Include="include\Instructions\IntegerArithmeticOperation.h">
+    <ClInclude Include="include\Instructions\ArithmeticOperationBase.h">
+      <Filter>Header Files\Instructions</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InstructionFormer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Instructions\ArithmeticOperations.h">
       <Filter>Header Files\Instructions</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,8 +80,8 @@
     <ClCompile Include="src\Instructions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Instructions\IntegerAddition.cpp">
-      <Filter>Source Files\Instructions</Filter>
+    <ClCompile Include="src\InstructionFormer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

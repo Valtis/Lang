@@ -13,7 +13,7 @@ VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT)
 {
 	m_generator.seed(time(nullptr));
 
-	m_instructionHandlers["i_add"] = Instructions::I_Add;
+	/*m_instructionHandlers["i_add"] = Instructions::I_Add;
 	m_instructionHandlers["i_sub"] = Instructions::I_Sub;
 	m_instructionHandlers["i_mul"] = Instructions::I_Mul;
 	m_instructionHandlers["i_mov"] = Instructions::I_Mov;
@@ -41,7 +41,7 @@ VM::VM() : m_stack_ptr(0), m_frame_ptr(0), m_cmpResult(NO_RESULT)
 
 	m_instructionHandlers["i_alloc"] = Instructions::I_Alloc;
 	m_instructionHandlers["ipr"] = Instructions::I_ptr_read;
-	m_instructionHandlers["ipw"] = Instructions::I_ptr_write;
+	m_instructionHandlers["ipw"] = Instructions::I_ptr_write;*/
 
 }
 

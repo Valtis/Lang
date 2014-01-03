@@ -25,7 +25,7 @@ private:
 
 
 
-	int m_gcThreshold;
+	unsigned int m_gcThreshold;
 	long int m_allocatedMemorySizeInBytes;
 
 	std::list<Ptr *> m_allocatedPointers;

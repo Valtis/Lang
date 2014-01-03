@@ -185,7 +185,7 @@ void Instructions::Print(VM * vm, const std::vector<std::string> &params)
 	if (params[1][0] == '@')
 	{
 
-		for (int i = 1; i < params.size(); ++i)
+		for (unsigned int i = 1; i < params.size(); ++i)
 		{
 
 			if (i == 1)
@@ -261,7 +261,7 @@ void Instructions::I_ptr_write(VM * vm, const std::vector<std::string> &params)
 	}
 
 	int value = I_ValueHelper(vm, params[1]);
-	int pos = I_ValueHelper(vm, params[2]);
+	unsigned int pos = I_ValueHelper(vm, params[2]);
 	int reg = GetRegisterNumber(params[3]);
 
 	if (!IsPointer(vm->m_registers[reg]))
@@ -500,7 +500,7 @@ void Instructions::StackRead(VM * vm, const std::vector<std::string> &params)
 	int offset = std::stoi(params[1]);
 	int reg = GetRegisterNumber(params[2]);
 
-	int pos = vm->m_frame_ptr + offset;
+	unsigned int pos = vm->m_frame_ptr + offset;
 	if (pos >= vm->m_stack.size())
 	{
 		throw std::runtime_error("STACKR stack overflow");
@@ -524,7 +524,7 @@ void Instructions::StackWrite(VM * vm, const std::vector<std::string> &params)
 	int offset = std::stoi(params[1]);
 	int reg = GetRegisterNumber(params[2]);
 
-	int pos = vm->m_frame_ptr + offset;
+	unsigned int pos = vm->m_frame_ptr + offset;
 	if (pos >= vm->m_stack.size())
 	{
 		throw std::runtime_error("STACKR stack overflow");

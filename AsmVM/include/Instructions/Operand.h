@@ -1,6 +1,8 @@
 #pragma once
 
-template <typename T>
+#include "VM.h"
+
+template <typename Type>
 class Operand
 {
 public:
@@ -14,10 +16,10 @@ public:
 
 	}
 
-	void SetValue(T value)
+	void SetValue(Type val)
 	{
 		m_useRegister = false;
-		value->m_value = value;
+		value.m_value = val;
 	}
 
 	void SetRegister(int reg)
@@ -27,17 +29,17 @@ public:
 		{
 			throw std::runtime_error("Invalid register specified: " + std::to_string(reg));
 		}
-		value->m_register = reg;
+		value.m_register = reg;
 	}
 	
-	T GetValue(VM *vm)
+	Type GetValue(VM *vm)
 	{
 		if (!m_useRegister)	
 		{
 			return value.m_value;
 		}
 		
-		return *(T *)(vm->m_registers[value.m_register]);
+		return *(Type *)(&vm->m_registers[value.m_register].values);
 	}
 	
 private:
@@ -45,7 +47,7 @@ private:
 	union 
 	{
 		int m_register;
-		T m_value;
+		Type m_value;
 	} value;
 };
 

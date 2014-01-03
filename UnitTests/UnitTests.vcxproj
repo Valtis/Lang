@@ -61,7 +61,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\StringUtility.obj;C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\FileTokenizer.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\StringUtility.obj;C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\FileTokenizer.obj;C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\VM.obj;C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\VMObject.obj;C:\Users\Omistaja\Documents\Visual Studio 2013\Projects\AsmVM\AsmVM\Debug\MemoryManager.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,7 +88,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IntegerArithmeticInstructionTest.cpp" />
     <ClCompile Include="FileTokenizerTest.cpp" />
+    <ClCompile Include="OperandTest.cpp" />
     <ClCompile Include="ToLowerTest.cpp" />
     <ClCompile Include="TrimTest.cpp" />
     <ClCompile Include="stdafx.cpp">
