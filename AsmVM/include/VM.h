@@ -26,15 +26,9 @@ public:
 
 
 	void Push(VMObject &o);
-
 	VMObject Pop();
 
-
-	typedef std::vector<std::string> &InstrParam;
-	void ExtractJumpPositions(std::vector<std::vector<std::string>> &tokens);
-	
-	std::unordered_map<std::string, int> m_jumpositions;
-	
+		
 	std::array<VMObject, REGISTER_CNT> m_registers;
 	std::array<VMObject, 1024> m_stack;
 

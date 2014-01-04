@@ -101,7 +101,5 @@ namespace UnitTests
 			Assert::AreEqual(2, newObject.values.integer_value);
 		}
 
-
-
 	};
 }

@@ -6,41 +6,33 @@
 class Jump : public Instruction
 {
 public:
-	Jump(const std::string &label) : m_label(label)
+	Jump(int instruction) : m_instruction(instruction)
 	{
 		
 	}
 
 	virtual ~Jump() { }
 
-	std::string GetLabel()
-	{
-		return m_label;
-	}
-
+	
 	virtual void Execute(VM *vm) override
 	{
-		if (vm->m_jumpositions.count(m_label) == 0)
-		{
-			throw std::runtime_error(std::string("Invalid label ") + m_label);
-		}
 		OnExecute(vm);
 	}
 
 protected:
 	virtual void OnExecute(VM *vm)
 	{
-		vm->m_instruction_ptr = vm->m_jumpositions[m_label];
+		vm->m_instruction_ptr = m_instruction;
 	}
 
 private:
-	std::string m_label;
+	int m_instruction;
 };
 
 class JumpNotEqual : public Jump
 {
 public:
-	JumpNotEqual(const std::string &label) : Jump(label)
+	JumpNotEqual(int instruction) : Jump(instruction)
 	{
 
 	}
@@ -57,7 +49,7 @@ private:
 class JumpIfEqual : public Jump
 {
 public:
-	JumpIfEqual(const std::string &label) : Jump(label)
+	JumpIfEqual(int instruction) : Jump(instruction)
 	{
 
 	}
@@ -74,7 +66,7 @@ private:
 class JumpIfLess : public Jump
 {
 public:
-	JumpIfLess(const std::string &label) : Jump(label)
+	JumpIfLess(int instruction) : Jump(instruction)
 	{
 
 	}
@@ -92,7 +84,7 @@ private:
 class JumpIfGreater : public Jump
 {
 public:
-	JumpIfGreater(const std::string &label) : Jump(label)
+	JumpIfGreater(int instruction) : Jump(instruction)
 	{
 
 	}
@@ -109,7 +101,7 @@ private:
 class CallSub : public Jump
 {
 public:
-	CallSub(const std::string &label) : Jump(label)
+	CallSub(int instruction) : Jump(instruction)
 	{
 
 	}
@@ -170,11 +162,3 @@ private:
 	int m_pops;
 
 };
-
-
-/*
-
-void Instructions::Ret(VM * vm, const std::vector<std::string> &params)
-{
-	
-}*/

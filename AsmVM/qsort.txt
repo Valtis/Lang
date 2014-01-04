@@ -8,7 +8,6 @@ push r0
 callsub fill_array_with_random_numbers
 
 print @Unsorted array:
-
 push r1
 push r0
 callsub print_array

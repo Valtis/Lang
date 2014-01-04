@@ -26,16 +26,14 @@ namespace UnitTests
 			
 		TEST_METHOD(FunctionCallWorksCorrectly)
 		{
-
 			VM vm;
-			vm.m_jumpositions["foo"] = 5;
-
 			std::vector<std::vector<std::string>> instructions = {
 				{ INTEGER_MOVE, "20", "r0" },
 				{ ALLOCATE_INTEGER_POINTER, "r0", "r1" },
 				{ PUSH, "r1" },
 				{ PUSH, "r0" },
 				{ CALLSUB, "foo" },
+				{ "foo:" },
 				{ PUSH, "r0" },
 				{ PUSH, "r1" },
 				{ STACK_READ, "-2", "r1" },

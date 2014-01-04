@@ -10,41 +10,26 @@ namespace UnitTests
 	TEST_CLASS(JumpTest)
 	{
 	public:
-
-		TEST_METHOD(JumpThrowsIfLabelIsWrong)
-		{
-			VM vm;
-
-			Jump jump("foo");
-			Assert::ExpectException<runtime_error>([&]() { jump.Execute(&vm); });
-		}
-
+				
 		TEST_METHOD(JumpMovesInstructionPointerToCorrectPosition)
 		{
 			VM vm;
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
-
-			Jump jump("foo");
+		
+			Jump jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
 
-		TEST_METHOD(JumpNotEqualThrowsIfLabelIsWrong)
-		{
-			VM vm;
-			JumpNotEqual jump("foo");
-			Assert::ExpectException<runtime_error>([&]() { jump.Execute(&vm); });
-		}
 
 		TEST_METHOD(JumpNotEqualMovesInstructionPointerToCorrectPositionWhenComparisonIsGreater)
 		{
 			VM vm;
 			
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
+			
 			vm.m_cmpResult = CmpResult::GREATER;
-			JumpNotEqual jump("foo");
+			JumpNotEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
@@ -54,9 +39,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::EQUAL;
-			JumpNotEqual jump("foo");
+			JumpNotEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -66,9 +50,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::LESSER;
-			JumpNotEqual jump("foo");
+			JumpNotEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
@@ -78,18 +61,10 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::NO_RESULT;
-			JumpNotEqual jump("foo");
+			JumpNotEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
-		}
-
-		TEST_METHOD(JumpIfEqualThrowsIfLabelIsWrong)
-		{
-			VM vm;
-			JumpIfEqual jump("foo");
-			Assert::ExpectException<runtime_error>([&]() { jump.Execute(&vm); });
 		}
 
 		TEST_METHOD(JumpIfEqualDoesNotMoveInstructionPointerToCorrectPositionWhenComparisonIsGreater)
@@ -97,9 +72,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::GREATER;
-			JumpIfEqual jump("foo");
+			JumpIfEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -109,9 +83,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::EQUAL;
-			JumpIfEqual jump("foo");
+			JumpIfEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
@@ -121,9 +94,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::LESSER;
-			JumpIfEqual jump("foo");
+			JumpIfEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -133,18 +105,10 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::NO_RESULT;
-			JumpIfEqual jump("foo");
+			JumpIfEqual jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
-		}
-
-		TEST_METHOD(JumpIfLessThrowsIfLabelIsWrong)
-		{
-			VM vm;
-			JumpIfLess jump("foo");
-			Assert::ExpectException<runtime_error>([&]() { jump.Execute(&vm); });
 		}
 
 		TEST_METHOD(JumpIfLessDoesNotMoveInstructionPointerToCorrectPositionWhenComparisonIsGreater)
@@ -152,9 +116,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::GREATER;
-			JumpIfLess jump("foo");
+			JumpIfLess jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -164,9 +127,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::EQUAL;
-			JumpIfLess jump("foo");
+			JumpIfLess jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -176,9 +138,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::LESSER;
-			JumpIfLess jump("foo");
+			JumpIfLess jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
@@ -188,28 +149,21 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			vm.m_cmpResult = CmpResult::NO_RESULT;
-			JumpIfLess jump("foo");
+			JumpIfLess jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
 
-		TEST_METHOD(JumpIfGreaterThrowsIfLabelIsWrong)
-		{
-			VM vm;
-			JumpIfGreater jump("foo");
-			Assert::ExpectException<runtime_error>([&]() { jump.Execute(&vm); });
-		}
 
 		TEST_METHOD(JumpIfGreaterMovesInstructionPointerToCorrectPositionWhenComparisonIsGreater)
 		{
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
+
 			vm.m_cmpResult = CmpResult::GREATER;
-			JumpIfGreater jump("foo");
+			JumpIfGreater jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
@@ -219,9 +173,9 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
+
 			vm.m_cmpResult = CmpResult::EQUAL;
-			JumpIfGreater jump("foo");
+			JumpIfGreater jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -231,9 +185,9 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
+
 			vm.m_cmpResult = CmpResult::LESSER;
-			JumpIfGreater jump("foo");
+			JumpIfGreater jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -243,9 +197,9 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
+
 			vm.m_cmpResult = CmpResult::NO_RESULT;
-			JumpIfGreater jump("foo");
+			JumpIfGreater jump(pos);
 			jump.Execute(&vm);
 			Assert::AreEqual(0, vm.m_instruction_ptr);
 		}
@@ -256,9 +210,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 			
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			Assert::AreEqual(2, vm.m_stack_ptr);
 		}
@@ -273,9 +226,8 @@ namespace UnitTests
 
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			Assert::AreEqual(5, vm.m_stack_ptr);
 		}
@@ -285,9 +237,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 25;
-			vm.m_jumpositions["foo"] = pos;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			sub.Execute(&vm);
 
@@ -299,9 +250,8 @@ namespace UnitTests
 			VM vm;
 
 			const int pos = 300;
-			vm.m_jumpositions["foo"] = pos;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
@@ -314,12 +264,9 @@ namespace UnitTests
 
 			const int pos = 300;
 			const int pos2 = 500;
-			vm.m_jumpositions["foo"] = pos;
 
-			vm.m_jumpositions["bar"] = pos2;
-
-			CallSub sub("foo");
-			CallSub sub2("bar");
+			CallSub sub(pos);
+			CallSub sub2(pos2);
 			sub.Execute(&vm);
 			sub2.Execute(&vm);
 			Assert::AreEqual(pos2, vm.m_instruction_ptr);
@@ -335,9 +282,8 @@ namespace UnitTests
 			vm.Push(foo);
 
 			const int pos = 300;
-			vm.m_jumpositions["foo"] = pos;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			vm.Pop();
 			auto framePtr = vm.Pop();
@@ -356,9 +302,8 @@ namespace UnitTests
 			vm.Push(foo);
 
 			const int pos = 300;
-			vm.m_jumpositions["foo"] = pos;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			sub.Execute(&vm);
 			vm.Pop();
@@ -374,9 +319,8 @@ namespace UnitTests
 			VMObject foo;
 
 			const int pos = 300;
-			vm.m_jumpositions["foo"] = pos;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			sub.Execute(&vm);
 			auto instructionPtr = vm.Pop();
 			
@@ -392,12 +336,8 @@ namespace UnitTests
 			const int pos = 300;
 			const int pos2 = 500;
 			
-			vm.m_jumpositions["foo"] = pos;
-			vm.m_jumpositions["bar"] = pos2;
-
-
-			CallSub sub("foo");
-			CallSub sub2("bar");
+			CallSub sub(pos);
+			CallSub sub2(pos2);
 			sub.Execute(&vm);
 			sub2.Execute(&vm);
 			auto instructionPtr = vm.Pop();
@@ -418,9 +358,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(0);
 
 			sub.Execute(&vm);
@@ -436,9 +376,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(0);
 
 			sub.Execute(&vm);
@@ -454,9 +394,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(0);
 
 			sub.Execute(&vm);
@@ -471,9 +411,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(2);
 
 			sub.Execute(&vm);
@@ -489,9 +429,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
-
-			CallSub sub("foo");
+			const int pos = 423;
+			
+			CallSub sub(pos);
 			Ret ret(2);
 
 			sub.Execute(&vm);
@@ -506,9 +446,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(2);
 
 			sub.Execute(&vm);
@@ -524,9 +464,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(0);
 
 			sub.Execute(&vm);
@@ -543,18 +483,18 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
-			vm.m_jumpositions["bar"] = 23;
+			const int pos = 423;
+			const int pos2 = 23;
 
-			CallSub sub("foo");
-			CallSub sub2("bar");
+			CallSub sub(pos);
+			CallSub sub2(pos2);
 			Ret ret(0);
 
 			sub.Execute(&vm);
 			sub2.Execute(&vm);
 			ret.Execute(&vm);
 
-			Assert::AreEqual(423, vm.m_instruction_ptr);
+			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
 
 		TEST_METHOD(FramePointerReturnedToCorrectValueAfterSubCallAndReturnWithNoParametersAndMultipleCalls)
@@ -563,9 +503,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(0);
 
 			sub.Execute(&vm);
@@ -580,9 +520,9 @@ namespace UnitTests
 			VM vm;
 			VMObject o;
 			
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(2);
 
 			vm.Push(o);
@@ -601,9 +541,9 @@ namespace UnitTests
 			VM vm;
 			VMObject o;
 
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(2);
 
 			vm.Push(o);
@@ -625,11 +565,12 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
-			vm.m_jumpositions["bar"] = 23;
 
-			CallSub sub("foo");
-			CallSub sub2("bar");
+			const int pos = 423;
+			const int pos2 = 23;
+
+			CallSub sub(pos);
+			CallSub sub2(pos2);
 			Ret ret(2);
 
 
@@ -640,7 +581,7 @@ namespace UnitTests
 			sub2.Execute(&vm);
 			ret.Execute(&vm);
 
-			Assert::AreEqual(423, vm.m_instruction_ptr);
+			Assert::AreEqual(pos, vm.m_instruction_ptr);
 		}
 
 		TEST_METHOD(FramePointerReturnedToCorrectValueAfterSubCallAndReturnWithParametersAndMultipleCalls)
@@ -649,9 +590,9 @@ namespace UnitTests
 			VMObject o;
 			vm.Push(o);
 			vm.Push(o);
-			vm.m_jumpositions["foo"] = 423;
+			const int pos = 423;
 
-			CallSub sub("foo");
+			CallSub sub(pos);
 			Ret ret(2);
 
 			sub.Execute(&vm);

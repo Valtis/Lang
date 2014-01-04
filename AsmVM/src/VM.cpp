@@ -28,7 +28,7 @@ void VM::Run(string fileName)
 	vector<vector<string>> tokens = FileTokenizer::Tokenize(file);
 
 	
-	ExtractJumpPositions(tokens);
+	
 	vector<std::unique_ptr<Instruction>> instructions;
 	try 
 	{
@@ -40,7 +40,7 @@ void VM::Run(string fileName)
 		return;
 	}
 	
-	int instructionsPerformed = 0;
+	long int instructionsPerformed = 0;
 
 	auto start = chrono::system_clock::now();
 	while (m_instruction_ptr < instructions.size() && m_endExecution == false)
@@ -75,32 +75,9 @@ void VM::Run(string fileName)
 
 	auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds> (end - start);
 	
-	printf("Performed %d instructions in %d millisecond", instructionsPerformed, milliseconds.count());
+	printf("Performed %d instructions in %ld millisecond", instructionsPerformed, milliseconds.count());
 
 }
-
-void VM::ExtractJumpPositions(vector<vector<string>> &tokens)
-{
-	int pos = 0;
-	auto it = tokens.begin();
-	while (it != tokens.end())
-	{
-		int endPos = (*it)[0].length() - 1;
-		if ((*it)[0][endPos] == ':')
-		{
-			auto label = (*it)[0].substr(0, endPos);
-			m_jumpositions[label] = pos-1;
-			it = tokens.erase(it);
-			continue;
-		}
-
-		++pos;
-		++it;
-	}
-}
-
-
-
 
 void VM::Push(VMObject &obj)
 {

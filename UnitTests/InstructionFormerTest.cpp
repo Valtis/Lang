@@ -20,9 +20,53 @@ namespace UnitTests
 	TEST_CLASS(InstructionFormerTest)
 	{
 	public:
+
+
+		TEST_METHOD(ExtractJumpPositionsExtractsLabels)
+		{
+			vector<vector<string>> tokens =
+			{
+				{ "test:" },
+				{ "MOV", "5", "r0" },
+				{ "loop:" },
+				{ "i_sub", "1", "r0" },
+				{ "i_cmp", "0", "r0" },
+				{ "jne", "loop" },
+				{ "print", "@finished!" },
+				{ "herp:" }
+			};
+
+			auto pos = InstructionFormer::ExtractJumpPositions(tokens);
+			Assert::AreNotEqual(0u, pos.count("test"));
+			Assert::AreNotEqual(0u, pos.count("loop"));
+			Assert::AreNotEqual(0u, pos.count("herp"));
+		}
+
+		TEST_METHOD(ExtractJumpPositionsExtractsLabelsWithCorrectJumpPositions)
+		{
+
+			vector<vector<string>> tokens =
+			{
+				{ "test:" },
+				{ "MOV", "5", "r0" },
+				{ "loop:" },
+				{ "i_sub", "1", "r0" },
+				{ "i_cmp", "0", "r0" },
+				{ "jne", "loop" },
+				{ "print", "@finished!" },
+				{ "herp:"}
+			};
+
+			auto pos = InstructionFormer::ExtractJumpPositions(tokens);
+			Assert::AreEqual(-1, pos["test"]);
+			Assert::AreEqual(0, pos["loop"]);
+			Assert::AreEqual(4, pos["herp"]);
+
+		}
+
 		TEST_METHOD(InstructionFormerFormsMultipleInstructionCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { INTEGER_ADDITION, "r0", "5", "r3" }, { INTEGER_MULTIPLICATION, "r2", "r5", "r3" }, { JUMP, "foo" } };
+			vector<vector<string>> fileTokens = { { "foo:" }, { INTEGER_ADDITION, "r0", "5", "r3" }, { INTEGER_MULTIPLICATION, "r2", "r5", "r3" }, { JUMP, "foo" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 
 			Assert::IsNotNull(dynamic_cast <Addition<int> *>(instructions[0].get()));
@@ -165,73 +209,69 @@ namespace UnitTests
 
 		TEST_METHOD(InstructionFormerFormsJumpInstructionCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { JUMP, "foo" } };
+			vector<vector<string>> fileTokens = { { "foo:" }, { JUMP, "foo" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Jump *>(instructions[0].get()));
 		}
-
-		TEST_METHOD(InstructionFormerJumpHasCorrectLabel)
-		{
-			vector<vector<string>> fileTokens = { { JUMP, "foo" } };
-			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
-
-			Assert::AreEqual(std::string("foo"), dynamic_cast<Jump *>(instructions[0].get())->GetLabel());
-		}
-
+		
 		TEST_METHOD(InstructionFormerFormsJumpNotEqualInstructionCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { JUMP_NOT_EQUAL, "foo" } };
+			vector<vector<string>> fileTokens = { { "foo:" }, { JUMP_NOT_EQUAL, "foo" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Jump *>(instructions[0].get()));
-		}
-
-		TEST_METHOD(InstructionFormerJumpNotEqualHasCorrectLabel)
-		{
-			vector<vector<string>> fileTokens = { { JUMP_NOT_EQUAL, "foo" } };
-			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
-			Assert::AreEqual(std::string("foo"), dynamic_cast<Jump *>(instructions[0].get())->GetLabel());
 		}
 
 		TEST_METHOD(InstructionFormerFormsJumpIfEqualInstructionCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { JUMP_IF_EQUAL, "foo" } };
+			vector<vector<string>> fileTokens = { { "foo:" }, { JUMP_IF_EQUAL, "foo" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Jump *>(instructions[0].get()));
-		}
-
-		TEST_METHOD(InstructionFormerJumpIfEqualHasCorrectLabel)
-		{
-			vector<vector<string>> fileTokens = { { JUMP_IF_EQUAL, "foo" } };
-			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
-			Assert::AreEqual(std::string("foo"), dynamic_cast<Jump *>(instructions[0].get())->GetLabel());
 		}
 
 		TEST_METHOD(InstructionFormerFormsJumpIfLesserInstructionCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { JUMP_IF_LESSER, "foo" } };
+			vector<vector<string>> fileTokens = { { "foo:" }, { JUMP_IF_LESSER, "foo" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Jump *>(instructions[0].get()));
 		}
 
-		TEST_METHOD(InstructionFormerJumpIfLesserHasCorrectLabel)
-		{
-			vector<vector<string>> fileTokens = { { JUMP_IF_LESSER, "foo" } };
-			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
-			Assert::AreEqual(std::string("foo"), dynamic_cast<Jump *>(instructions[0].get())->GetLabel());
-		}
 
 		TEST_METHOD(InstructionFormerFormsJumpIfGreaterInstructionCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { JUMP_IF_GREATER, "foo" } };
+			vector<vector<string>> fileTokens = { { "foo:" }, { JUMP_IF_GREATER, "foo" } };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <Jump *>(instructions[0].get()));
 		}
 
-		TEST_METHOD(InstructionFormerJumpIfGreaterHasCorrectLabel)
+		TEST_METHOD(InstructionFormerFormsThrowsIfLabelIsWrong)
+		{
+			vector<vector<string>> fileTokens = { { JUMP, "foo" } };
+			Assert::ExpectException<runtime_error>([&]() { InstructionFormer::FormInstructions(fileTokens); });
+		}
+
+		TEST_METHOD(InstructionFormerFormsThrowsIfJumpLabelIsWrong)
+		{
+			vector<vector<string>> fileTokens = { { JUMP_NOT_EQUAL, "foo" } };
+			Assert::ExpectException<runtime_error>([&]() { InstructionFormer::FormInstructions(fileTokens); });
+		}
+
+		TEST_METHOD(InstructionFormerFormsThrowsIfJumpIfEqualLabelIsWrong)
+		{
+			vector<vector<string>> fileTokens = { { JUMP_IF_EQUAL, "foo" } };
+			Assert::ExpectException<runtime_error>([&]() { InstructionFormer::FormInstructions(fileTokens); });
+		}
+
+		TEST_METHOD(InstructionFormerFormsThrowsIfJumpIfLessLabelIsWrong)
+		{
+			vector<vector<string>> fileTokens = { { JUMP_IF_LESSER, "foo" } };
+			Assert::ExpectException<runtime_error>([&]() { InstructionFormer::FormInstructions(fileTokens); });
+		}
+
+
+		TEST_METHOD(InstructionFormerFormsThrowsIfJumpIfGreaterLabelIsWrong)
 		{
 			vector<vector<string>> fileTokens = { { JUMP_IF_GREATER, "foo" } };
-			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
-			Assert::AreEqual(std::string("foo"), dynamic_cast<Jump *>(instructions[0].get())->GetLabel());
+			Assert::ExpectException<runtime_error>([&]() { InstructionFormer::FormInstructions(fileTokens); });
 		}
 
 		TEST_METHOD(InstructionFormerFormsIntegerRandomizationInstructionCorrectly)
@@ -243,7 +283,7 @@ namespace UnitTests
 
 		TEST_METHOD(InstructionFormerFormsCallSubCorrectly)
 		{
-			vector<vector<string>> fileTokens = { { CALLSUB, "foobar" } };
+			vector<vector<string>> fileTokens = { { CALLSUB, "foobar" }, {"foobar:"} };
 			vector<std::unique_ptr<Instruction>> instructions = InstructionFormer::FormInstructions(fileTokens);
 			Assert::IsNotNull(dynamic_cast <CallSub *>(instructions[0].get()));
 		}
