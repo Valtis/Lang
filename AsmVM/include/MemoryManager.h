@@ -18,6 +18,12 @@ public:
 	bool MustCollect() { return m_allocatedPointers.size() >= m_gcThreshold;  }
 	void RunGC(VM *vm);
 
+	void SweepPointers();
+
+	void MarkStack(VM * vm);
+
+	void MarkRegisters(VM * vm);
+
 	void DebugHeapPrint();
 
 	long int AllocatedMemory() { return m_allocatedMemorySizeInBytes; };

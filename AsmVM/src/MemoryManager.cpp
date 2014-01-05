@@ -80,7 +80,19 @@ VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 void MemoryManager::RunGC(VM *vm)
 {
 	//printf("Running garbage collector: Memory allocated now: %d bytes\n", m_allocatedMemory);
-	int reg = 0;
+	MarkRegisters(vm);
+	MarkStack(vm);
+	SweepPointers();
+
+	//printf("After garbage collection: Memory allocated now: %d bytes\n", m_allocatedMemory);
+	m_gcThreshold = m_allocatedPointers.size() * 2;
+	m_gcThreshold = m_gcThreshold < GC_MIN_THRESHOLD ? GC_MIN_THRESHOLD : m_gcThreshold;
+	//printf("Adjusting collection threshold to %d\n", m_gcThreshold);
+}
+
+
+void MemoryManager::MarkRegisters(VM * vm)
+{
 	for (auto &r : vm->m_registers)
 	{
 
@@ -88,9 +100,11 @@ void MemoryManager::RunGC(VM *vm)
 		{
 			r.values.ptr->m_marked = true;
 		}
-		++reg;
 	}
+}
 
+void MemoryManager::MarkStack(VM * vm)
+{
 	for (int i = 0; i < vm->m_stack_ptr; ++i)
 	{
 		if (IsPointer(vm->m_stack[i]))
@@ -98,7 +112,10 @@ void MemoryManager::RunGC(VM *vm)
 			vm->m_stack[i].values.ptr->m_marked = true;
 		}
 	}
+}
 
+void MemoryManager::SweepPointers()
+{
 	auto it = m_allocatedPointers.begin();
 	while (it != m_allocatedPointers.end())
 	{
@@ -110,19 +127,15 @@ void MemoryManager::RunGC(VM *vm)
 			it = m_allocatedPointers.erase(it);
 			continue;
 		}
-		else 
+		else
 		{
 			(*it)->m_marked = false;
 		}
 		it++;
 	}
-
-
-	//printf("After garbage collection: Memory allocated now: %d bytes\n", m_allocatedMemory);
-	m_gcThreshold = m_allocatedPointers.size() * 2;
-	m_gcThreshold = m_gcThreshold < GC_MIN_THRESHOLD ? GC_MIN_THRESHOLD : m_gcThreshold;
-	//printf("Adjusting collection threshold to %d\n", m_gcThreshold);
 }
+
+
 
 void MemoryManager::DebugHeapPrint()
 {
