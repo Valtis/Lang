@@ -1,0 +1,137 @@
+Currently only integers are implemented (i_* - operations)
+Floating point operations may be implemented later.
+
+Errors with commands lead to undefined behaviour.
+
+All registers and values are 32 bit signed integers.
+Floating point operations will be 64 bit floating point values (doubles)
+
+16 registers are available (r0 - r15)
+Registers can hold all values
+
+Note: Unless otherwise stated, any "value"-fields can be either an appropriate number or 
+a register (appropriate as in integer for i_* -commands, floating point for future d_* commands)
+
+Arithmetic operations:
+
+Move
+  i_mov value1 store_register
+    Moves value1 into store_register.     
+
+Addition
+  i_add value1 value2 store_register
+    Adds value1 and value2 together and stores the result into store_register
+    value1 and value2 may be either registers or numbers (integers)
+
+Substraction
+  i_sub value1 value2 store_register
+    Substracts value2 from value1 and stores the result into store_register  
+
+Multiplication
+  i_mul value1 value2 store_register
+    Multiplies value1 with value2 and stores the result into store_register
+
+Division
+  i_div value1 value2 store_register
+    Divides value1 with value2 and stores the result into store_register.
+    Division by zero will terminate the program.
+
+Random integer
+  i_rand value1 value2 store_register
+    Generates random integer between [value1, value2] and stores it into store_register
+    
+Integer comparison
+  i_cmp value1 value2
+    Compares value1 with value2. Result is stored internally and used by conditional jump commands
+      Example: Value1 is greater than value2 - > jgre will jump
+
+Label
+  label_name:
+    Designates label for jumps and callsub. Note the ':'
+
+Jump
+  jump label
+    Jumps to label. Note the lack of ':'
+
+Jump if equal
+  jeq label
+    Jumps to label if last comparison was equal. Note the lack of ':'
+
+Jump if greater
+  jgre label
+    Jumps to label if in last comparison value1 was greater. Note the lack of ':'
+
+Jump if lesser
+  jle label
+    Jumps to label if in last comparison value1 was lesser. Note the lack of ':'
+
+Jump if not equal
+  jne label
+    Jumps to label if last comparison was not equal. Note the lack of ':'
+
+Call sub
+  callsub label
+    Saves instruction and frame pointers into stack and jumps to label.
+
+Return from sub
+  ret value
+    Returns from sub, restoring frame and instruction pointers. Pops number of elements from
+    the stack as given by value. Value must be an integer
+
+Push
+  Push register
+    Pushes the value of the register into the stack.
+
+Pop
+  Pop register
+    Pops the topmost element in the stack into register.
+
+Stack read
+  stackr offset register
+    Reads the value of the stack and stores it into register. Offset is relative to the frame pointer
+    If no sub calls have been performed, frame pointer is zero. Otherwise any parameters are stored
+    into values between [-number of parameters, -1].
+    
+Stack write
+  stackw offset register
+    Writes a value in register into stack. Offset is relative to the frame pointer (see above).
+    Values 0 and 1 are used to store call state during sub call and should not be modified.
+
+Print register
+  Prints the value of the register
+
+Print @Text
+  Prints the text. Right now all text will be in lower case.
+
+Allocation
+  i_alloc value register
+    Allocates number of elements stored in value and stores pointer in register.
+    Memory will be automatically reclaimed once pointer is no longer accessible from the program
+
+Reading from pointer
+  ipr pointer_register value1 store_register
+    Reads value from pointer stored in pointer_register from element specified by value1 and
+    stores the value into store_register. Equal to store_register = pointer_register[value]
+
+Writing to pointer
+  ipw value value2 pointer_register
+    Writes value to pointer stored in pointer_register to element specified by value2
+    Equal to pointer_register[value2] = value in C-like languages
+
+Ending program execution
+  end
+
+Force garbage collection
+  gc
+
+Print memory status (debug-operation, can be removed)
+  print_mem_mgr_debug
+
+
+
+
+
+
+
+
+

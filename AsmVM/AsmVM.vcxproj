@@ -40,6 +40,7 @@
     <ClCompile Include="src\VMObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="doc\command_reference.txt" />
     <Text Include="factorial.txt" />
     <Text Include="memalloctest.txt" />
     <Text Include="memtest.txt" />

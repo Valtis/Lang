@@ -118,5 +118,8 @@
     <Text Include="qsort.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="doc\command_reference.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
