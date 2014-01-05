@@ -7,9 +7,7 @@ int main(int argc, char **argv)
 	if (argc < 2)
 	{
 		printf("Not enough command line parameters: File name expected");
-		VM vm;
-		vm.Run("test.txt");
-		return 0;
+		return -1;
 	}
 
 	
