@@ -18,11 +18,6 @@ public:
 	bool MustCollect() { return m_allocatedPointers.size() >= m_gcThreshold;  }
 	void RunGC(VM *vm);
 
-	void SweepPointers();
-
-	void MarkStack(VM * vm);
-
-	void MarkRegisters(VM * vm);
 
 	void DebugHeapPrint();
 
@@ -30,7 +25,11 @@ public:
 
 private:
 
+	void SweepPointers();
 
+	void MarkStack(VM * vm);
+
+	void MarkRegisters(VM * vm);
 
 
 	unsigned int m_gcThreshold;
