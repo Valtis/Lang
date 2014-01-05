@@ -13,8 +13,7 @@ MemoryManager::~MemoryManager()
 {
 	for (auto &ptr : m_allocatedPointers)
 	{
-		free(ptr->ptr);
-		free(ptr);
+		free(ptr.ptr);
 	}
 }
 
@@ -22,16 +21,8 @@ MemoryManager::~MemoryManager()
 VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 {
 	VMObject o;
-	Ptr *managedPtr = (Ptr *)malloc(sizeof(Ptr));
-	if (managedPtr == nullptr)
-	{
-		RunGC(vm);
-		Ptr *managedPtr = (Ptr *)malloc(sizeof(Ptr));
-		if (managedPtr == nullptr)
-		{
-			throw std::runtime_error("Memory allocation failed - out of memory?");
-		}
-	}
+	Ptr managedPtr;
+
 	int size;
 
 	switch (t)
@@ -52,17 +43,17 @@ VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 		throw std::runtime_error("Internal VM error - attempting to allocate non pointer type");
 	}
 
-	managedPtr->m_marked = false;
-	managedPtr->size = cnt*size;
-	m_allocatedMemorySizeInBytes += managedPtr->size;
+	managedPtr.m_marked = false;
+	managedPtr.size = cnt*size;
+	m_allocatedMemorySizeInBytes += managedPtr.size;
 	
-	managedPtr->ptr = malloc(size*cnt);
+	managedPtr.ptr = malloc(size*cnt);
 	
-	if (managedPtr->ptr == nullptr)
+	if (managedPtr.ptr == nullptr)
 	{
 		RunGC(vm);
-		managedPtr->ptr = malloc(size*cnt);
-		if (managedPtr == nullptr)
+		managedPtr.ptr = malloc(size*cnt);
+		if (managedPtr.ptr == nullptr)
 		{
 			throw std::runtime_error("Memory allocation failed - out of memory?");
 		}
@@ -70,8 +61,9 @@ VMObject MemoryManager::Allocate(VM *vm, ObjectType t, int cnt)
 
 
 	o.type = t;
-	o.values.ptr = managedPtr;
+	
 	m_allocatedPointers.push_back(managedPtr);
+	o.values.ptr = &m_allocatedPointers.back();
 
 	return o;
 }
@@ -119,17 +111,16 @@ void MemoryManager::SweepPointers()
 	auto it = m_allocatedPointers.begin();
 	while (it != m_allocatedPointers.end())
 	{
-		if (!(*it)->m_marked)
+		if (!it->m_marked)
 		{
-			m_allocatedMemorySizeInBytes -= (*it)->size;
-			free((*it)->ptr);
-			free(*it);
+			m_allocatedMemorySizeInBytes -= it->size;
+			free(it->ptr);
 			it = m_allocatedPointers.erase(it);
 			continue;
 		}
 		else
 		{
-			(*it)->m_marked = false;
+			it->m_marked = false;
 		}
 		it++;
 	}

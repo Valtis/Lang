@@ -35,5 +35,7 @@ private:
 	unsigned int m_gcThreshold;
 	long int m_allocatedMemorySizeInBytes;
 
-	std::list<Ptr *> m_allocatedPointers;
+	// note - pointers to the list elements are stored elsewhere
+	// do not replace with any container where pointers may be invalidated due to insert\erase
+	std::list<Ptr> m_allocatedPointers;
 };
