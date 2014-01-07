@@ -95,28 +95,31 @@ Stack read
 Stack write
   stackw offset register
     Writes a value in register into stack. Offset is relative to the frame pointer (see above).
-    Values 0 and 1 are used to store call state during sub call and should not be modified.
+    Offsets 0 and 1 are used to store call state during sub call and should not be modified.
 
-Print register
-  Prints the value of the register
-
-Print @Text
-  Prints the text. Right now all text will be in lower case.
+Printing
+  print register
+    Prints the value of the register
+  print @Text
+    Prints the text. Right now all text will be in lower case.
 
 Allocation
   i_alloc value register
-    Allocates number of elements stored in value and stores pointer in register.
+    Allocates number of integer elements stored in value and stores pointer in register.
     Memory will be automatically reclaimed once pointer is no longer accessible from the program
 
 Reading from pointer
-  ipr pointer_register value1 store_register
-    Reads value from pointer stored in pointer_register from element specified by value1 and
-    stores the value into store_register. Equal to store_register = pointer_register[value]
+  ipr pointer_register value store_register
+    Reads value from pointer stored in pointer_register from element specified by value and
+    stores the result into store_register. Equal to store_register = pointer_register[value].
+    If pointer_register does not contain a pointer, the program will terminate.
+    
 
 Writing to pointer
-  ipw value value2 pointer_register
-    Writes value to pointer stored in pointer_register to element specified by value2
+  ipw value1 value2 pointer_register
+    Writes value1 to pointer stored in pointer_register to element specified by value2
     Equal to pointer_register[value2] = value in C-like languages
+    If pointer_register does not contain a pointer, the program will terminate. 
 
 Ending program execution
   end
