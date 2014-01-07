@@ -3,13 +3,13 @@ Floating point operations may be implemented later.
 
 Errors with commands lead to undefined behaviour.
 
-All registers and values are 32 bit signed integers.
+Integers are 32 bit signed integers.
 Floating point operations will be 64 bit floating point values (doubles)
 
 16 registers are available (r0 - r15)
-Registers can hold all values
+Registers can hold all values, value type is determined by last store.
 
-Note: Unless otherwise stated, any "value"-fields can be either an appropriate number or 
+Note: Unless otherwise stated, any "value"-fields in command descriptions can be either an appropriate number or 
 a register (appropriate as in integer for i_* -commands, floating point for future d_* commands)
 
 Arithmetic operations:
