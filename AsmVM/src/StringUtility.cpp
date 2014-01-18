@@ -3,7 +3,7 @@
 #include "Tokens.h"
 using namespace std;
 
-vector<string> Utility::Tokenize(const string &text,string delimiters)
+vector<string> Utility::Tokenize(const string &text, const string &delimiters)
 {
   vector<string> tokens;
   if (text.size() == 0)

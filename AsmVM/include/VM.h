@@ -13,7 +13,7 @@
 #define STACK_SIZE 2048
 class Instructions;
 
-enum CmpResult {NO_RESULT, LESSER, EQUAL, GREATER };
+enum CmpResult { NO_RESULT, LESSER, EQUAL, GREATER };
 
 
 class VM
@@ -23,7 +23,6 @@ public:
 	~VM();
 
 	void Run(std::string file);
-
 
 	void Push(VMObject &o);
 	VMObject Pop();
@@ -38,9 +37,7 @@ public:
 	CmpResult m_cmpResult;
 	
 	MemoryManager m_memoryManager;
-
 	std::mt19937 m_generator;
-
 	bool m_endExecution;
 };
 
