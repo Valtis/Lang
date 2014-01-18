@@ -33,8 +33,25 @@ public:
 
 	void ParseFile(const std::string &fileName, std::vector<std::vector<std::string>> &tokens, std::vector<std::unique_ptr<Instruction>> &instructions);
 
-	void Push(VMObject &o);
-	VMObject Pop();
+	void Push(VMObject &o) 
+	{  
+		if (m_stack_ptr >= STACK_SIZE)
+		{
+			throw std::runtime_error("Stack overflow");
+		}
+		m_stack[m_stack_ptr++] = o;
+	}
+
+	VMObject Pop()
+	{
+		if (m_stack_ptr == 0)
+		{
+			throw std::runtime_error("Stack underflow");
+		}
+		--m_stack_ptr;
+		return m_stack[m_stack_ptr];
+	}
+
 
 		
 	std::array<VMObject, REGISTER_CNT> m_registers;

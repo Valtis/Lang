@@ -100,25 +100,3 @@ void VM::PrintError(const vector<vector<string>> &tokens, const exception &ex)
 	printf("Error on command %s\n", error.c_str());
 	printf("Error: %s\n", ex.what());
 }
-
-
-
-void VM::Push(VMObject &obj)
-{
-	if (m_stack_ptr >= STACK_SIZE)
-	{
-		throw std::runtime_error("Stack overflow");
-	}
-	m_stack[m_stack_ptr++] = obj;
-
-}
-
-VMObject VM::Pop()
-{
-	if (m_stack_ptr == 0)
-	{
-		throw std::runtime_error("Stack underflow");
-	}
-	--m_stack_ptr;
-	return m_stack[m_stack_ptr];
-}
