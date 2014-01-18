@@ -5,13 +5,14 @@
 #include <array>
 #include <stack>
 #include <unordered_map>
+#include <memory>
 #include <random>
 #include "MemoryManager.h"
 
 #include "VmObject.h"
 #define REGISTER_CNT 16
 #define STACK_SIZE 2048
-class Instructions;
+class Instruction;
 
 enum CmpResult { NO_RESULT, LESSER, EQUAL, GREATER };
 
@@ -23,6 +24,14 @@ public:
 	~VM();
 
 	void Run(std::string file);
+
+	void ExecuteProgram(std::vector<std::unique_ptr<Instruction>> &instructions, long int &instructionsPerformed, std::vector<std::vector<std::string>> tokens);
+
+	void PrintError(const std::vector<std::vector<std::string>> &tokens, const std::exception &ex);
+
+	void HandleGarbageCollection();
+
+	void ParseFile(const std::string &fileName, std::vector<std::vector<std::string>> &tokens, std::vector<std::unique_ptr<Instruction>> &instructions);
 
 	void Push(VMObject &o);
 	VMObject Pop();
