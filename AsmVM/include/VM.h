@@ -55,7 +55,7 @@ public:
 
 		
 	std::array<VMObject, REGISTER_CNT> m_registers;
-	std::array<VMObject, 1024> m_stack;
+	std::array<VMObject, STACK_SIZE> m_stack;
 
 	int m_stack_ptr; // points to a next free stack spot
 	int m_instruction_ptr;

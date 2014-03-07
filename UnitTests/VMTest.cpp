@@ -10,6 +10,20 @@ namespace UnitTests
 	{
 	public:
 
+    TEST_METHOD(VMCanPushMaxNumberOfObjects)
+    {
+      VM vm;
+      
+      VMObject o;
+      
+      for (int i = 0; i < STACK_SIZE; ++i)
+      {
+        vm.Push(o);
+      }
+      
+      Assert::AreEqual(STACK_SIZE, vm.m_stack_ptr);
+    }
+
 		TEST_METHOD(VMThrowsOnStackOverflow)
 		{
 			VM vm;
